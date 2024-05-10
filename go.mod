@@ -3,7 +3,7 @@ module github.com/bfun/star
 go 1.22.3
 
 require (
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.9.1
 	golang.org/x/text v0.15.0
 )
 
