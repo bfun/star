@@ -7,8 +7,15 @@ import (
 	"strings"
 )
 
+var dtas map[string]DataTransferAdapter
+var svcs map[string]map[string]Service
+
+func init() {
+	dtas = ParseAllDtaParmXml()
+	svcs = ParseAllServiceXml()
+}
+
 func dtasHandler(c *gin.Context) {
-	dtas := ParseAllDtaParmXml()
 	var v []string
 	for k, _ := range dtas {
 		v = append(v, k)
@@ -19,7 +26,6 @@ func dtasHandler(c *gin.Context) {
 func dtaHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	DTANAME := strings.ToUpper(dtaName)
-	dtas := ParseAllDtaParmXml()
 	dta, ok := dtas[DTANAME]
 	var v any
 	if ok {
@@ -32,7 +38,6 @@ func dtaHandler(c *gin.Context) {
 func svcsHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	DTANAME := strings.ToUpper(dtaName)
-	svcs := ParseAllServiceXml()
 	fmt.Printf("len(svcs)=%d\n", len(svcs))
 	dta, ok := svcs[DTANAME]
 	fmt.Printf("dta=%#v, ok=%v\n", dta, ok)
@@ -53,7 +58,6 @@ func svcHandler(c *gin.Context) {
 	svcName := c.Param("svc")
 	DTANAME := strings.ToUpper(dtaName)
 	SVCNAME := strings.ToUpper(svcName)
-	svcs := ParseAllServiceXml()
 	dta, ok := svcs[DTANAME]
 	var v any
 	if ok {
