@@ -42,6 +42,7 @@ func svcsHandler(c *gin.Context) {
 		for k, _ := range dta {
 			s = append(s, k)
 		}
+		v = s
 	} else {
 		v = gin.H{dtaName: "not found"}
 	}
