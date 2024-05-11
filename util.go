@@ -35,3 +35,14 @@ func getGbFileDecoder(fileName string) *xml.Decoder {
 	}
 	return decoder
 }
+func getStarFileDecoder(fileName string) *xml.Decoder {
+	buf, err := os.ReadFile(fileName)
+	if err != nil {
+		panic(err)
+	}
+	olds := `<?xml version="1.0" encoding="ISO-8859-1" ?>`
+	news := `<?xml version="1.0" encoding="UTF-8" ?>`
+	buf = bytes.Replace(buf, []byte(olds), []byte(news), 1)
+	r := transform.NewReader(bytes.NewReader(buf), simplifiedchinese.GB18030.NewDecoder())
+	return xml.NewDecoder(r)
+}

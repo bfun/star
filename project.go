@@ -55,7 +55,7 @@ type ProjectDta struct {
 
 func ParseProjectFile() Project {
 	fullpath := path.Join(getRootDir(), "etc/Project.xml")
-	decoder := getGbFileDecoder(fullpath)
+	decoder := getStarFileDecoder(fullpath)
 	var v Project
 	err := decoder.Decode(&v)
 	if err != nil {
