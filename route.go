@@ -11,16 +11,20 @@ type RouteTab struct {
 }
 
 type Rule struct {
-	RuleID    string     `xml:"RuleID,attr"`
-	RuleType  string     `xml:"RuleType,attr"`
-	SvcExpr   *string    `xml:"SvcExpr,chardata"`
-	RouteExpr string     `xml:"RouteExpr,chardata"`
-	Entrances []Entrance `xml:"EntranceTab>Entrance"`
+	RuleID    string       `xml:"RuleID,attr"`
+	RuleType  string       `xml:"RuleType,attr"`
+	SvcExpr   xml.CharData `xml:"SvcExpr"`
+	RouteExpr xml.CharData `xml:"RouteExpr"`
+	Entrances []Entrance   `xml:"EntranceTab>Entrance"`
 }
 type Entrance struct {
-	Destination string `xml:"Destination,attr"`
-	DstType     string `xml:"DstType,attr"`
-	Expr        string `xml:"Expr,chardata"`
+	Destination string       `xml:"Destination,attr"`
+	DstType     string       `xml:"DstType,attr"`
+	Expr        xml.CharData `xml:"Expr"`
+}
+
+type CDATA struct {
+	Value string `xml:",chardata"`
 }
 
 func parseOneRouteXml(fileName string) map[string]Entrance {
@@ -34,7 +38,7 @@ func parseOneRouteXml(fileName string) map[string]Entrance {
 	m := make(map[string]Entrance)
 	for _, r := range v.Rules {
 		for _, e := range r.Entrances {
-			m[e.Expr] = e
+			m[string(e.Expr)] = e
 		}
 	}
 	return m
