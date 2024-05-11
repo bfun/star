@@ -9,8 +9,10 @@ func TestParseESAdminFile(t *testing.T) {
 	e := star.ParseESAdminFile()
 	var ports, nodes []star.ESAdminDtaParm
 	for _, v := range e.DtaParms {
-		if len(v.IPTabItems) > 0 {
-			t.Log(v.DtaName, v.IPTabItems)
+		for _, p := range v.IPTabItems {
+			if p.Port != "" {
+				t.Log(v.DtaName, v.IPTabItems)
+			}
 		}
 		if len(v.IPTabItems) > 1 {
 			ports = append(ports, v)
