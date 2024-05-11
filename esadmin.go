@@ -19,10 +19,21 @@ type ESAdmin struct {
 type ESAdminDtaParm struct {
 	DtaName    string             `xml:"DtaName,attr"`
 	IPTabItems []ESAdminIPTabItem `xml:"DtaMchTab>DtaMch>IPTab>Item"`
+	Nodes      []ESAdminDtaNode   `xml:"DtaNodeTab>DtaNode"`
 }
 
 type ESAdminIPTabItem struct {
 	Port string `xml:"Port,attr"`
+}
+
+type ESAdminDtaNode struct {
+	NodeName string             `xml:"NodeName,attr"`
+	Port     ESAdminDtaNodePort `xml:"PORTDefs>port"`
+}
+
+type ESAdminDtaNodePort struct {
+	NodeIP   string `xml:"NodeIP,attr"`
+	NodePort string `xml:"NodePort,attr"`
 }
 
 func ParseESAdminFile() ESAdmin {

@@ -7,16 +7,29 @@ import (
 
 func TestParseESAdminFile(t *testing.T) {
 	e := star.ParseESAdminFile()
-	var dtas []star.ESAdminDtaParm
+	var ports, nodes []star.ESAdminDtaParm
 	for _, v := range e.DtaParms {
-		t.Log(v.DtaName, v.IPTabItems)
+		if len(v.IPTabItems) > 0 {
+			t.Log(v.DtaName, v.IPTabItems)
+		}
 		if len(v.IPTabItems) > 1 {
-			dtas = append(dtas, v)
+			ports = append(ports, v)
+		}
+		if len(v.Nodes) > 0 {
+			t.Log(v.DtaName, v.Nodes)
+		}
+		if len(v.Nodes) > 1 {
+			nodes = append(nodes, v)
 		}
 	}
-	if len(dtas) == 0 {
-		t.Error("all Dta len(Ports) == 0")
+	if len(ports) == 0 {
+		t.Error("all Dta len(Ports) <= 1")
 	} else {
-		t.Log(dtas)
+		t.Log(ports)
+	}
+	if len(nodes) == 0 {
+		t.Error("all Dta len(Nodes) <= 1")
+	} else {
+		t.Log(nodes)
 	}
 }
