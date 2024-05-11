@@ -13,15 +13,14 @@ type RouteTab struct {
 type Rule struct {
 	RuleID    string     `xml:"RuleID,attr"`
 	RuleType  string     `xml:"RuleType,attr"`
-	SvcExpr   *string    `xml:"SvcExpr,cdata"`
+	SvcExpr   *string    `xml:"SvcExpr,chardata"`
 	RouteExpr string     `xml:"RouteExpr,chardata"`
 	Entrances []Entrance `xml:"EntranceTab>Entrance"`
 }
 type Entrance struct {
 	Destination string `xml:"Destination,attr"`
 	DstType     string `xml:"DstType,attr"`
-	Expr        string `xml:"Expr,cdata"`
-	Expr2       string `xml:"Expr,chardata"`
+	Expr        string `xml:"Expr,chardata"`
 }
 
 func parseOneRouteXml(fileName string) map[string]Entrance {
