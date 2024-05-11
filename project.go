@@ -3,6 +3,7 @@ package star
 import (
 	"encoding/xml"
 	"path"
+	"strings"
 )
 
 type Project struct {
@@ -46,6 +47,56 @@ type ProjectDta struct {
 	Route     string `xml:"Route,attr"`
 }
 
+func trimFilePrefix(p *Project) {
+	prefix := "file://"
+	for k, v := range p.PubDtas {
+		v.Name = strings.TrimPrefix(v.Name, prefix)
+		v.Desc = strings.TrimPrefix(v.Desc, prefix)
+		v.DtaParm = strings.TrimPrefix(v.DtaParm, prefix)
+		v.CustCFunc = strings.TrimPrefix(v.CustCFunc, prefix)
+		v.DataElem = strings.TrimPrefix(v.DataElem, prefix)
+		v.Format = strings.TrimPrefix(v.Format, prefix)
+		v.Sign = strings.TrimPrefix(v.Sign, prefix)
+		v.Service = strings.TrimPrefix(v.Service, prefix)
+		v.Route = strings.TrimPrefix(v.Route, prefix)
+		p.PubDtas[k] = v
+	}
+	for ka, va := range p.Apps {
+		va.Name = strings.TrimPrefix(va.Name, prefix)
+		va.Desc = strings.TrimPrefix(va.Desc, prefix)
+		va.Format = strings.TrimPrefix(va.Format, prefix)
+		va.Sign = strings.TrimPrefix(va.Sign, prefix)
+		va.CustCFunc = strings.TrimPrefix(va.CustCFunc, prefix)
+		va.Flow = strings.TrimPrefix(va.Flow, prefix)
+		va.DataElem = strings.TrimPrefix(va.DataElem, prefix)
+		for ks, vs := range va.SubApps {
+			vs.Name = strings.TrimPrefix(vs.Name, prefix)
+			vs.Desc = strings.TrimPrefix(vs.Desc, prefix)
+			vs.AlaParm = strings.TrimPrefix(vs.AlaParm, prefix)
+			vs.Format = strings.TrimPrefix(vs.Format, prefix)
+			vs.Sign = strings.TrimPrefix(vs.Sign, prefix)
+			vs.Flow = strings.TrimPrefix(vs.Flow, prefix)
+			vs.DataElem = strings.TrimPrefix(vs.DataElem, prefix)
+			vs.CustCFunc = strings.TrimPrefix(vs.CustCFunc, prefix)
+			vs.SvcLogic = strings.TrimPrefix(vs.SvcLogic, prefix)
+			for kd, vd := range vs.Dtas {
+				vd.Name = strings.TrimPrefix(vd.Name, prefix)
+				vd.Desc = strings.TrimPrefix(vd.Desc, prefix)
+				vd.DtaParm = strings.TrimPrefix(vd.DtaParm, prefix)
+				vd.CustCFunc = strings.TrimPrefix(vd.CustCFunc, prefix)
+				vd.DataElem = strings.TrimPrefix(vd.DataElem, prefix)
+				vd.Format = strings.TrimPrefix(vd.Format, prefix)
+				vd.Sign = strings.TrimPrefix(vd.Sign, prefix)
+				vd.Service = strings.TrimPrefix(vd.Service, prefix)
+				vd.Route = strings.TrimPrefix(vd.Route, prefix)
+				vs.Dtas[kd] = vd
+			}
+			va.SubApps[ks] = vs
+		}
+		p.Apps[ka] = va
+	}
+
+}
 func ParseProjectFile() Project {
 	fullpath := path.Join(getRootDir(), "etc/Project.xml")
 	decoder := getStarFileDecoder(fullpath)
@@ -54,6 +105,7 @@ func ParseProjectFile() Project {
 	if err != nil {
 		panic(err)
 	}
+	trimFilePrefix(&v)
 	return v
 }
 
