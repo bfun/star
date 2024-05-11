@@ -96,29 +96,36 @@ func serviceArrayToMap(services []Service) map[string]Service {
 	return m
 }
 
-func parseOneServiceXml(fileName string) (dtaName string, services map[string]Service) {
+func parseOneServiceXml(fileName string) map[string]Service {
 	fullPath := path.Join(getRootDir(), fileName)
-	s := strings.TrimSuffix(fileName, "/Service.xml")
-	i := strings.LastIndex(s, "/")
-	dtaName = s[i+1:]
-
-	var v ServiceTab
 	decoder := getGbFileDecoder(fullPath)
+	var v ServiceTab
 	err := decoder.Decode(&v)
 	if err != nil {
 		panic(err)
 	}
 	trimServiceCDATA(&v)
-	services = serviceArrayToMap(v.Services)
-	return
+	return serviceArrayToMap(v.Services)
 }
 
 func ParseAllServiceXml() map[string]map[string]Service {
 	m := make(map[string]map[string]Service)
 	files := getServiceFiles()
-	for _, file := range files {
-		dtaName, services := parseOneServiceXml(file)
-		m[dtaName] = services
+	for dta, file := range files {
+		services := parseOneServiceXml(file)
+		m[dta] = services
 	}
 	return m
+}
+
+func GetServiceNamesByDta(dta string) []string {
+	m, ok := SVCMAP[dta]
+	if !ok {
+		return nil
+	}
+	var s []string
+	for k, _ := range m {
+		s = append(s, k)
+	}
+	return s
 }

@@ -6,26 +6,36 @@ import (
 	"strings"
 )
 
-var dtas map[string]DataTransferAdapter
-var svcs map[string]map[string]Service
-
-func init() {
-	dtas = ParseAllDtaParmXml()
-	svcs = ParseAllServiceXml()
+type DtaSum struct {
+	Name string
+	Desc string
+	Port string
+	Node string
 }
 
-func dtasHandler(c *gin.Context) {
-	var v []string
-	for k, _ := range dtas {
-		v = append(v, k)
+func svrsHandler(c *gin.Context) {
+	var dtas []DtaSum
+	for _, v := range ESADMIN.DtaParms {
+		if !isSVR(v.DtaName) {
+			continue
+		}
+		dta := DtaSum{Name: v.DtaName, Desc: v.DtaDesc}
+		var ports []string
+		for _, v := range v.IPTabItems {
+			if v.Port != "" {
+				ports = append(ports, v.Port)
+			}
+		}
+		dta.Port = strings.Join(ports, ",")
+		dtas = append(dtas, dta)
 	}
-	c.JSON(http.StatusOK, v)
+	c.JSON(http.StatusOK, dtas)
 }
 
-func dtaHandler(c *gin.Context) {
+func svrHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	DTANAME := strings.ToUpper(dtaName)
-	dta, ok := dtas[DTANAME]
+	dta, ok := DTAMAP[DTANAME]
 	var v any
 	if ok {
 		v = dta
@@ -34,11 +44,43 @@ func dtaHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, v)
 }
+
+func cltsHandler(c *gin.Context) {
+	var dtas []DtaSum
+	for _, v := range ESADMIN.DtaParms {
+		if !isCLT(v.DtaName) {
+			continue
+		}
+		dta := DtaSum{Name: v.DtaName, Desc: v.DtaDesc}
+		var nodes []string
+		for _, v := range v.Nodes {
+			node := v.Port.NodeIP + ":" + v.Port.NodePort
+			nodes = append(nodes, node)
+		}
+		dta.Node = strings.Join(nodes, ",")
+		dtas = append(dtas, dta)
+	}
+	c.JSON(http.StatusOK, dtas)
+}
+
+func cltHandler(c *gin.Context) {
+	dtaName := c.Param("dta")
+	DTANAME := strings.ToUpper(dtaName)
+	dta, ok := DTAMAP[DTANAME]
+	var v any
+	if ok {
+		v = dta
+	} else {
+		v = gin.H{dtaName: "not found"}
+	}
+	c.JSON(http.StatusOK, v)
+}
+
 func svcsHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	DTANAME := strings.ToUpper(dtaName)
-	// fmt.Printf("len(svcs)=%d\n", len(svcs))
-	dta, ok := svcs[DTANAME]
+	// fmt.Printf("len(SVCMAP)=%d\n", len(SVCMAP))
+	dta, ok := SVCMAP[DTANAME]
 	// fmt.Printf("dta=%#v, ok=%v\n", dta, ok)
 	var v any
 	if ok {
@@ -57,7 +99,7 @@ func svcHandler(c *gin.Context) {
 	svcName := c.Param("svc")
 	DTANAME := strings.ToUpper(dtaName)
 	SVCNAME := strings.ToUpper(svcName)
-	dta, ok := svcs[DTANAME]
+	dta, ok := SVCMAP[DTANAME]
 	var v any
 	if ok {
 		v, ok = dta[SVCNAME]
@@ -69,3 +111,11 @@ func svcHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, v)
 }
+
+func rutsHandler(c *gin.Context) {}
+
+func rutHandler(c *gin.Context) {}
+
+func fmtsHandler(c *gin.Context) {}
+
+func fmtHandler(c *gin.Context) {}

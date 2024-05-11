@@ -75,9 +75,8 @@ func parseOneDtaParmXml(fileName string) DataTransferAdapter {
 func ParseAllDtaParmXml() map[string]DataTransferAdapter {
 	m := make(map[string]DataTransferAdapter)
 	files := getDtaParmFiles()
-	for _, file := range files {
-		dta := parseOneDtaParmXml(file)
-		m[dta.Name] = dta
+	for dta, file := range files {
+		m[dta] = parseOneDtaParmXml(file)
 	}
 	judgeConvertPin(m)
 	parseNESB_SDTA_NAME(m)

@@ -3,14 +3,7 @@ package star
 import (
 	"encoding/xml"
 	"path"
-	"strings"
 )
-
-var project Project
-
-func init() {
-	project = ParseProjectFile()
-}
 
 type Project struct {
 	XMLName xml.Name     `xml:"Project"`
@@ -64,32 +57,64 @@ func ParseProjectFile() Project {
 	return v
 }
 
-func getKindFilenamesFromProject(prefix string) []string {
-	file, scanner := fileScanner("etc/Project.xml")
-	defer file.Close()
-	var files []string
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if !strings.HasPrefix(line, prefix) {
-			continue
+func getDtaParmFiles() map[string]string {
+	m := make(map[string]string)
+	for _, dta := range PROJECT.PubDtas {
+		m[dta.Name] = dta.DtaParm
+	}
+	for _, v := range PROJECT.Apps {
+		for _, sub := range v.SubApps {
+			for _, dta := range sub.Dtas {
+				m[dta.Name] = dta.DtaParm
+			}
 		}
-		line = strings.TrimSuffix(strings.TrimPrefix(line, prefix), `"`)
-		files = append(files, line)
 	}
-	if err := scanner.Err(); err != nil {
-		panic(err)
+	return m
+}
+
+func getServiceFiles() map[string]string {
+	m := make(map[string]string)
+	for _, dta := range PROJECT.PubDtas {
+		m[dta.Name] = dta.Service
 	}
-	return files
+	for _, v := range PROJECT.Apps {
+		for _, sub := range v.SubApps {
+			for _, dta := range sub.Dtas {
+				m[dta.Name] = dta.Service
+			}
+		}
+	}
+	return m
 }
 
-func getDtaParmFiles() []string {
-	return getKindFilenamesFromProject(`DtaParm="file://`)
+func getRouteFiles() map[string]string {
+	m := make(map[string]string)
+	for _, dta := range PROJECT.PubDtas {
+		m[dta.Name] = dta.Route
+	}
+	for _, v := range PROJECT.Apps {
+		for _, sub := range v.SubApps {
+			for _, dta := range sub.Dtas {
+				m[dta.Name] = dta.Route
+			}
+		}
+	}
+	return m
 }
 
-func getServiceFiles() []string {
-	return getKindFilenamesFromProject(`Service="file://`)
-}
-
-func getFormatFiles() []string {
-	return getKindFilenamesFromProject(`Format="file://`)
+func getFormatFiles() map[string]string {
+	m := make(map[string]string)
+	for _, dta := range PROJECT.PubDtas {
+		m[dta.Name] = dta.Format
+	}
+	for _, v := range PROJECT.Apps {
+		for _, sub := range v.SubApps {
+			for _, dta := range sub.Dtas {
+				m[dta.Name] = dta.Format
+			}
+			m[sub.Name] = sub.Format
+		}
+		m[v.Name] = v.Format
+	}
+	return m
 }

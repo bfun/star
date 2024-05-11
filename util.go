@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 )
 
 func getRootDir() string {
@@ -45,4 +46,12 @@ func getStarFileDecoder(fileName string) *xml.Decoder {
 	buf = bytes.Replace(buf, []byte(olds), []byte(news), 1)
 	r := transform.NewReader(bytes.NewReader(buf), simplifiedchinese.GB18030.NewDecoder())
 	return xml.NewDecoder(r)
+}
+
+func isSVR(dta string) bool {
+	return strings.Contains(dta, "_SVR") || strings.Contains(dta, "_SGET") || strings.Contains(dta, "_SPUT") || strings.Contains(dta, "_PAY") || strings.Contains(dta, "_CLS")
+}
+
+func isCLT(dta string) bool {
+	return strings.Contains(dta, "_CLT") || strings.Contains(dta, "_CPUT") || strings.Contains(dta, "_CGET")
 }

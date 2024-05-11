@@ -5,12 +5,6 @@ import (
 	"path"
 )
 
-var esadmin ESAdmin
-
-func init() {
-	esadmin = ParseESAdminFile()
-}
-
 type ESAdmin struct {
 	XMLName  xml.Name         `xml:"ESAdmin"`
 	DtaParms []ESAdminDtaParm `xml:"DtaParmTab>DtaParm"`
@@ -18,6 +12,7 @@ type ESAdmin struct {
 
 type ESAdminDtaParm struct {
 	DtaName    string             `xml:"DtaName,attr"`
+	DtaDesc    string             `xml:"DtaDesc,attr"`
 	IPTabItems []ESAdminIPTabItem `xml:"DtaMchTab>DtaMch>IPTab>Item"`
 	Nodes      []ESAdminDtaNode   `xml:"DtaNodeTab>DtaNode"`
 }
