@@ -1,7 +1,6 @@
 package star
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -38,9 +37,9 @@ func dtaHandler(c *gin.Context) {
 func svcsHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	DTANAME := strings.ToUpper(dtaName)
-	fmt.Printf("len(svcs)=%d\n", len(svcs))
+	// fmt.Printf("len(svcs)=%d\n", len(svcs))
 	dta, ok := svcs[DTANAME]
-	fmt.Printf("dta=%#v, ok=%v\n", dta, ok)
+	// fmt.Printf("dta=%#v, ok=%v\n", dta, ok)
 	var v any
 	if ok {
 		var s []string
