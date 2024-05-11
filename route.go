@@ -3,6 +3,7 @@ package star
 import (
 	"encoding/xml"
 	"path"
+	"strings"
 )
 
 type RouteTab struct {
@@ -23,8 +24,16 @@ type Entrance struct {
 	Expr        string `xml:"Expr"`
 }
 
-type CDATA struct {
-	Value string `xml:",chardata"`
+func trimSpacesFromCDATA(r *RouteTab) {
+	for i, rule := range r.Rules {
+		rule.SvcExpr = strings.TrimSpace(rule.SvcExpr)
+		rule.RouteExpr = strings.TrimSpace(rule.RouteExpr)
+		for j, entrance := range rule.Entrances {
+			entrance.Expr = strings.TrimSpace(entrance.Expr)
+			rule.Entrances[j] = entrance
+		}
+		r.Rules[i] = rule
+	}
 }
 
 func parseOneRouteXml(fileName string) map[string]Entrance {
@@ -35,6 +44,7 @@ func parseOneRouteXml(fileName string) map[string]Entrance {
 	if err != nil {
 		panic(err)
 	}
+	trimSpacesFromCDATA(&v)
 	m := make(map[string]Entrance)
 	for _, r := range v.Rules {
 		for _, e := range r.Entrances {
