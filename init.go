@@ -6,6 +6,7 @@ var DTALIST []string
 var ALALIST []string
 var DTAMAP map[string]DataTransferAdapter
 var SVCMAP map[string]map[string]Service
+var RUTMAP map[string]map[string]Entrance
 
 func init() {
 	ESADMIN = ParseESAdminFile()
@@ -23,4 +24,5 @@ func init() {
 	}
 	DTAMAP = ParseAllDtaParmXml()
 	SVCMAP = ParseAllServiceXml()
+	RUTMAP = ParseAllRouteXml()
 }

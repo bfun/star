@@ -98,11 +98,10 @@ func svcHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	svcName := c.Param("svc")
 	DTANAME := strings.ToUpper(dtaName)
-	SVCNAME := strings.ToUpper(svcName)
 	dta, ok := SVCMAP[DTANAME]
 	var v any
 	if ok {
-		v, ok = dta[SVCNAME]
+		v, ok = dta[svcName]
 		if !ok {
 			v = gin.H{dtaName + "." + svcName: "not found"}
 		}
@@ -112,9 +111,35 @@ func svcHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, v)
 }
 
-func rutsHandler(c *gin.Context) {}
+func rutsHandler(c *gin.Context) {
+	dtaName := c.Param("dta")
+	DTANAME := strings.ToUpper(dtaName)
+	dta, ok := RUTMAP[DTANAME]
+	var v any
+	if ok {
+		v = dta
+	} else {
+		v = gin.H{dtaName: "not found"}
+	}
+	c.JSON(http.StatusOK, v)
+}
 
-func rutHandler(c *gin.Context) {}
+func rutHandler(c *gin.Context) {
+	dtaName := c.Param("dta")
+	svcName := c.Param("svc")
+	DTANAME := strings.ToUpper(dtaName)
+	dta, ok := RUTMAP[DTANAME]
+	var v any
+	if ok {
+		v, ok = dta[svcName]
+		if !ok {
+			v = gin.H{dtaName + "." + svcName: "not found"}
+		}
+	} else {
+		v = gin.H{dtaName: "not found"}
+	}
+	c.JSON(http.StatusOK, v)
+}
 
 func fmtsHandler(c *gin.Context) {}
 

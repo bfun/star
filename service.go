@@ -98,7 +98,7 @@ func serviceArrayToMap(services []Service) map[string]Service {
 
 func parseOneServiceXml(fileName string) map[string]Service {
 	fullPath := path.Join(getRootDir(), fileName)
-	decoder := getGbFileDecoder(fullPath)
+	decoder := getStarFileDecoder(fullPath)
 	var v ServiceTab
 	err := decoder.Decode(&v)
 	if err != nil {
