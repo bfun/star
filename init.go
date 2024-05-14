@@ -7,6 +7,7 @@ var ALALIST []string
 var DTAMAP map[string]DataTransferAdapter
 var SVCMAP map[string]map[string]Service
 var RUTMAP map[string]map[string]Entrance
+var FMTMAP map[string]Format
 
 func init() {
 	ESADMIN = ParseESAdminFile()
@@ -25,4 +26,5 @@ func init() {
 	DTAMAP = ParseAllDtaParmXml()
 	SVCMAP = ParseAllServiceXml()
 	RUTMAP = ParseAllRouteXml()
+	FMTMAP = ParseAllFormatXml()
 }

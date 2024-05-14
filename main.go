@@ -12,6 +12,7 @@ func Main() {
 	r.GET("/svc/:dta/:svc", svcHandler)
 	r.GET("/ruts/:dta", rutsHandler)
 	r.GET("/rut/:dta/:svc", rutHandler)
+	r.GET("/fmta", fmtaHandler)
 	r.GET("/fmts/:sub", fmtsHandler)
 	r.GET("/fmt/:fmt", fmtHandler)
 	r.Run(":8080")

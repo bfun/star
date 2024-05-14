@@ -141,6 +141,21 @@ func rutHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, v)
 }
 
-func fmtsHandler(c *gin.Context) {}
+func fmtaHandler(c *gin.Context) {
+	keys := getKeysInMap(FMTMAP)
+	c.JSON(http.StatusOK, keys)
+}
 
-func fmtHandler(c *gin.Context) {}
+func fmtsHandler(c *gin.Context) {
+	sub := c.Param("sub")
+	keys := getSomeKeysInMap(FMTMAP, sub)
+	c.JSON(http.StatusOK, keys)
+}
+
+func fmtHandler(c *gin.Context) {
+	fmt := c.Param("fmt")
+	f, ok := FMTMAP[fmt]
+	if ok {
+		c.JSON(http.StatusOK, f)
+	}
+}

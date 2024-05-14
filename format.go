@@ -37,6 +37,7 @@ func trimFormatCDATA(formats map[string]Format) {
 					panic(kf + "/fmt/SubName empty")
 				}
 				vf.SubFmts = append(vf.SubFmts, vi.SubName)
+				continue
 			}
 			if vi.ItemType == "expr" {
 				s := strings.TrimSpace(vi.SubExpr)
@@ -78,7 +79,7 @@ func formatArrayToMap(formats []Format, m map[string]Format) {
 }
 func parseOneFormatXml(fileName string, m map[string]Format) {
 	fullPath := path.Join(getRootDir(), fileName)
-	decoder := getGbFileDecoder(fullPath)
+	decoder := getStarFileDecoder(fullPath)
 	var v FormatTab
 	err := decoder.Decode(&v)
 	if err != nil {

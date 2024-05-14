@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"sort"
 	"strings"
 )
 
@@ -54,4 +55,24 @@ func isSVR(dta string) bool {
 
 func isCLT(dta string) bool {
 	return strings.Contains(dta, "_CLT") || strings.Contains(dta, "_CPUT") || strings.Contains(dta, "_CGET")
+}
+
+func getKeysInMap[T any](m map[string]T) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func getSomeKeysInMap[T any](m map[string]T, sub string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		if strings.Contains(k, sub) {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	return keys
 }
