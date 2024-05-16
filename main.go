@@ -1,9 +1,13 @@
 package star
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+)
 
 func Main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.GET("/svrs", svrsHandler)
 	r.GET("/svr/:dta", svrHandler)
 	r.GET("/clts", cltsHandler)
@@ -15,5 +19,5 @@ func Main() {
 	r.GET("/fmta", fmtaHandler)
 	r.GET("/fmts/:sub", fmtsHandler)
 	r.GET("/fmt/:fmt", fmtHandler)
-	r.Run(":8080")
+	r.Run(":8000")
 }
