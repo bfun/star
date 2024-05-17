@@ -35,4 +35,5 @@ func init() {
 	log.Print("Route.xml parse success")
 	FMTMAP = ParseAllFormatXml()
 	log.Print("Format.xml parse success")
+	linkServicesToDtas(SVCMAP, DTAMAP)
 }

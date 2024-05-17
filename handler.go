@@ -18,8 +18,8 @@ type SvcSum struct {
 	Service  Service
 	Route    Entrance
 	Message  []string
-	Request  []Format
-	Response []Format
+	Request  []string
+	Response []string
 }
 
 func svrsHandler(c *gin.Context) {
@@ -148,25 +148,12 @@ func getServiceFormat(dta, svc string, v SvcSum, first bool) {
 		v.Message = append(v.Message, fmt.Sprintf("%v.%v service not found", dta, svc))
 		return
 	}
-	f, ok := FMTMAP[s.IFmt]
-	if ok {
-		if first {
-			v.Request = append(v.Request, f)
-		} else {
-			v.Response = append(v.Response, f)
-		}
+	if first {
+		v.Request = append(v.Request, s.IFmt)
+		v.Response = append(v.Response, s.OFmt)
 	} else {
-		v.Message = append(v.Message, fmt.Sprintf("%v format not found", s.IFmt))
-	}
-	f, ok = FMTMAP[s.OFmt]
-	if ok {
-		if first {
-			v.Response = append(v.Response, f)
-		} else {
-			v.Request = append(v.Request, f)
-		}
-	} else {
-		v.Message = append(v.Message, fmt.Sprintf("%v format not found", s.IFmt))
+		v.Request = append(v.Request, s.OFmt)
+		v.Response = append(v.Response, s.IFmt)
 	}
 }
 
@@ -212,9 +199,10 @@ func fmtsHandler(c *gin.Context) {
 }
 
 func fmtHandler(c *gin.Context) {
+	dta := c.Param("dta")
+	svc := c.Param("svc")
+	DTA := strings.ToUpper(dta)
 	fmt := c.Param("fmt")
-	f, ok := FMTMAP[fmt]
-	if ok {
-		c.JSON(http.StatusOK, f)
-	}
+	m := findElemsInFormat(DTA, svc, fmt)
+	c.JSON(http.StatusOK, m)
 }

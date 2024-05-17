@@ -2,6 +2,7 @@ package star
 
 import (
 	"encoding/xml"
+	"fmt"
 	"path"
 	"regexp"
 	"strings"
@@ -95,5 +96,80 @@ func ParseAllFormatXml() map[string]Format {
 		parseOneFormatXml(f, m)
 	}
 	trimFormatCDATA(m)
+	return m
+}
+
+func getVarFormatName(dta, svc, format string) string {
+	if !strings.Contains(format, "+") {
+		return format
+	}
+	RIG := "RIG($stdmsgtype+$stdprocode,10)"
+	if strings.Contains(format, RIG) {
+		format = strings.Replace(format, RIG, svc, 1)
+	}
+	CBS := "$CBS_FORMAT"
+	if strings.Contains(format, CBS) {
+		format = strings.Replace(format, CBS, svc, 1)
+	}
+	SVC := "$__SVCNAME"
+	if strings.Contains(format, SVC) {
+		format = strings.Replace(format, SVC, svc, 1)
+	}
+	SDTA := "$NESB_SDTA_NAME"
+	if strings.Contains(format, SDTA) {
+		to := dta
+		d, ok := DTAMAP[dta]
+		if !ok {
+			panic(dta + svc + format)
+		}
+		if d.NESB_SDTA_NAME != "" {
+			to = d.NESB_SDTA_NAME
+		}
+		s, ok := d.Services[svc]
+		if !ok {
+			panic(dta + svc + format)
+		}
+		if s.NESB_SDTA_NAME != "" {
+			to = s.NESB_SDTA_NAME
+		}
+		format = strings.Replace(format, SDTA, to, 1)
+	}
+	DDTA := "$NESB_DDTA_NAME"
+	if strings.Contains(format, DDTA) {
+		to := dta
+		d, ok := DTAMAP[dta]
+		if !ok {
+			panic(dta + svc + format)
+		}
+		if d.NESB_DDTA_NAME != "" {
+			to = d.NESB_DDTA_NAME
+		}
+		format = strings.Replace(format, DDTA, to, 1)
+	}
+	return strings.ReplaceAll(format, "+", "")
+}
+func findElemsInFormat(dta, svc, format string) map[string]string {
+	m := make(map[string]string)
+	f, ok := FMTMAP[format]
+	if !ok {
+		fmt.Println(dta, svc, format, "format not found")
+		return nil
+	}
+	for _, v := range f.Items {
+		if v.ItemType != "item" || v.ItemIgnr == "yes" {
+			continue
+		}
+		m[v.XmlName] = v.ElemName
+	}
+	for _, sub := range f.SubFmts {
+		sub2 := getVarFormatName(dta, svc, sub)
+		if sub2 != sub {
+			fmt.Printf("getVarFormatName %v.%v %v -> %v\n", dta, svc, sub, sub2)
+		}
+		subElems := findElemsInFormat(dta, svc, sub2)
+		for k, v := range subElems {
+			m[k] = v
+		}
+	}
 	return m
 }

@@ -18,6 +18,6 @@ func Main() {
 	r.GET("/rut/:dta/:svc", rutHandler)
 	r.GET("/fmta", fmtaHandler)
 	r.GET("/fmts/:sub", fmtsHandler)
-	r.GET("/fmt/:fmt", fmtHandler)
+	r.GET("/fmt/:dta/:svc/:fmt", fmtHandler)
 	r.Run(":8000")
 }

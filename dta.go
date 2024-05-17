@@ -12,9 +12,10 @@ type DataTransferAdapter struct {
 	Name             string   `xml:"Name,attr"`
 	EvtIprtcfmtBegin string   `xml:"EvtIprtcfmtBegin"`
 	EvtIprtcfmtEnd   string   `xml:"EvtIprtcfmtEnd"`
+	EvtOprtcfmtBegin string   `xml:"EvtOprtcfmtBegin"`
 	EvtIfmtEnd       string   `xml:"EvtIfmtEnd"`
 	EvtOfmtBegin     string   `xml:"EvtOfmtBegin"`
-	EvtOprtcfmtBegin string   `xml:"EvtOprtcfmtBegin"`
+	EvtAcallBegin    string   `xml:"EvtAcallBegin"`
 	ConvertPin       bool
 	Services         map[string]Service
 	NESB_SDTA_NAME   string
@@ -60,6 +61,27 @@ func parseNESB_SDTA_NAME(dtas map[string]DataTransferAdapter) {
 		}
 	}
 }
+func parseNESB_DDTA_NAME(dtas map[string]DataTransferAdapter) {
+	target := "$NESB_DDTA_NAME"
+	re := regexp.MustCompile(`\$NESB_DDTA_NAME="(.*?)"`)
+	for k, v := range dtas {
+		if strings.Contains(v.EvtOfmtBegin, target) {
+			s := re.FindStringSubmatch(v.EvtOfmtBegin)
+			if len(s) == 2 {
+				v.NESB_DDTA_NAME = s[1]
+			}
+		}
+		if strings.Contains(v.EvtAcallBegin, target) {
+			s := re.FindStringSubmatch(v.EvtAcallBegin)
+			if len(s) == 2 {
+				v.NESB_DDTA_NAME = s[1]
+			}
+		}
+		if v.NESB_DDTA_NAME != "" {
+			dtas[k] = v
+		}
+	}
+}
 func parseOneDtaParmXml(fileName string) DataTransferAdapter {
 	fullPath := path.Join(getRootDir(), fileName)
 	var v DataTransferAdapter
@@ -80,23 +102,17 @@ func ParseAllDtaParmXml() map[string]DataTransferAdapter {
 	}
 	judgeConvertPin(m)
 	parseNESB_SDTA_NAME(m)
+	parseNESB_DDTA_NAME(m)
 	return m
 }
 
-func getAllConvertPinDtas() map[string]DataTransferAdapter {
-	dtas := ParseAllDtaParmXml()
-	svcs := ParseAllServiceXml()
+func linkServicesToDtas(svcs map[string]map[string]Service, dtas map[string]DataTransferAdapter) {
 	for k, v := range svcs {
 		d, ok := dtas[k]
-		if ok {
-			d.Services = v
-			dtas[k] = d
-		} else {
-			var dta DataTransferAdapter
-			dta.ConvertPin = false
-			dta.Services = v
-			dtas[k] = dta
+		if !ok {
+			panic(k + " not found in dtas")
 		}
+		d.Services = v
+		dtas[k] = d
 	}
-	return dtas
 }
