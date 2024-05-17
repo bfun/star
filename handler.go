@@ -15,9 +15,11 @@ type DtaSum struct {
 }
 
 type SvcSum struct {
-	Service Service
-	Route   Entrance
-	Message string
+	Service  Service
+	Route    Entrance
+	Message  []string
+	Request  []Format
+	Response []Format
 }
 
 func svrsHandler(c *gin.Context) {
@@ -107,7 +109,6 @@ func svcHandler(c *gin.Context) {
 	DTANAME := strings.ToUpper(dtaName)
 	msvc, ok := SVCMAP[DTANAME]
 	var v SvcSum
-	var message []string
 	if ok {
 		v.Service, ok = msvc[svcName]
 		if ok {
@@ -117,19 +118,56 @@ func svcHandler(c *gin.Context) {
 				if !ok {
 					v.Route, ok = mrut["^"+svcName+"$"]
 					if !ok {
-						message = append(message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+						v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 					}
 				}
 			} else {
-				message = append(message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+				v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+			}
+			getServiceFormat(DTANAME, svcName, v, true)
+			if v.Route.DstType == "DTA" && v.Route.Destination != "" && v.Route.SvcName != "" {
+				getServiceFormat(v.Route.Destination, v.Route.SvcName, v, false)
 			}
 		} else {
-			message = append(message, fmt.Sprintf("%v.%v service not found", dtaName, svcName))
+			v.Message = append(v.Message, fmt.Sprintf("%v.%v service not found", dtaName, svcName))
 		}
 	} else {
-		v.Message = dtaName + " not found"
+		v.Message = append(v.Message, dtaName+" not found")
 	}
 	c.JSON(http.StatusOK, v)
+}
+
+func getServiceFormat(dta, svc string, v SvcSum, first bool) {
+	m, ok := SVCMAP[dta]
+	if !ok {
+		v.Message = append(v.Message, fmt.Sprintf("%v not found", dta))
+		return
+	}
+	s, ok := m[svc]
+	if !ok {
+		v.Message = append(v.Message, fmt.Sprintf("%v.%v service not found", dta, svc))
+		return
+	}
+	f, ok := FMTMAP[s.IFmt]
+	if ok {
+		if first {
+			v.Request = append(v.Request, f)
+		} else {
+			v.Response = append(v.Response, f)
+		}
+	} else {
+		v.Message = append(v.Message, fmt.Sprintf("%v format not found", s.IFmt))
+	}
+	f, ok = FMTMAP[s.OFmt]
+	if ok {
+		if first {
+			v.Response = append(v.Response, f)
+		} else {
+			v.Request = append(v.Request, f)
+		}
+	} else {
+		v.Message = append(v.Message, fmt.Sprintf("%v format not found", s.IFmt))
+	}
 }
 
 func rutsHandler(c *gin.Context) {
