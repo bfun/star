@@ -21,6 +21,8 @@ type Rule struct {
 type Entrance struct {
 	Destination string `xml:"Destination,attr"`
 	DstType     string `xml:"DstType,attr"`
+	SvcName     string `xml:"SvcName,attr"`
+	NodeName    string `xml:"NodeName,attr"`
 	Expr        string `xml:"Expr"`
 }
 
@@ -29,8 +31,7 @@ func trimSpacesFromCDATA(r *RouteTab) {
 		rule.SvcExpr = strings.TrimSpace(rule.SvcExpr)
 		rule.RouteExpr = strings.TrimSpace(rule.RouteExpr)
 		for j, entrance := range rule.Entrances {
-			entrance.Expr = strings.TrimSpace(entrance.Expr)
-			rule.Entrances[j] = entrance
+			rule.Entrances[j].Expr = strings.TrimSpace(entrance.Expr)
 		}
 		r.Rules[i] = rule
 	}
