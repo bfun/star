@@ -130,9 +130,9 @@ func svcHandler(c *gin.Context) {
 			} else {
 				v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 			}
-			getServiceFormat(DTANAME, svcName, v, true)
+			getServiceFormat(DTANAME, svcName, &v, true)
 			if v.Route.DstType == "DTA" && v.Route.Destination != "" && v.Route.SvcName != "" {
-				getServiceFormat(v.Route.Destination, v.Route.SvcName, v, false)
+				getServiceFormat(v.Route.Destination, v.Route.SvcName, &v, false)
 			}
 		} else {
 			v.Message = append(v.Message, fmt.Sprintf("%v.%v service not found", dtaName, svcName))
@@ -143,7 +143,7 @@ func svcHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, v)
 }
 
-func getServiceFormat(dta, svc string, v SvcSum, first bool) {
+func getServiceFormat(dta, svc string, v *SvcSum, first bool) {
 	m, ok := SVCMAP[dta]
 	if !ok {
 		v.Message = append(v.Message, fmt.Sprintf("%v not found", dta))
