@@ -18,8 +18,14 @@ type SvcSum struct {
 	Service  Service
 	Route    Entrance
 	Message  []string
-	Request  []string
-	Response []string
+	Request  []FmtSum
+	Response []FmtSum
+}
+
+type FmtSum struct {
+	Dta string
+	Svc string
+	Fmt string
 }
 
 func svrsHandler(c *gin.Context) {
@@ -149,11 +155,11 @@ func getServiceFormat(dta, svc string, v SvcSum, first bool) {
 		return
 	}
 	if first {
-		v.Request = append(v.Request, s.IFmt)
-		v.Response = append(v.Response, s.OFmt)
+		v.Request = append(v.Request, FmtSum{Dta: dta, Svc: svc, Fmt: s.IFmt})
+		v.Response = append(v.Response, FmtSum{Dta: dta, Svc: svc, Fmt: s.OFmt})
 	} else {
-		v.Request = append(v.Request, s.OFmt)
-		v.Response = append(v.Response, s.IFmt)
+		v.Request = append(v.Request, FmtSum{Dta: dta, Svc: svc, Fmt: s.OFmt})
+		v.Response = append(v.Response, FmtSum{Dta: dta, Svc: svc, Fmt: s.IFmt})
 	}
 }
 
