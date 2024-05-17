@@ -1,6 +1,7 @@
 package star
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -11,6 +12,12 @@ type DtaSum struct {
 	Desc string
 	Port string
 	Node string
+}
+
+type SvcSum struct {
+	Service Service
+	Route   Entrance
+	Message string
 }
 
 func svrsHandler(c *gin.Context) {
@@ -98,15 +105,24 @@ func svcHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	svcName := c.Param("svc")
 	DTANAME := strings.ToUpper(dtaName)
-	dta, ok := SVCMAP[DTANAME]
-	var v any
+	msvc, ok := SVCMAP[DTANAME]
+	var v SvcSum
+	var message []string
 	if ok {
-		v, ok = dta[svcName]
-		if !ok {
-			v = gin.H{dtaName + "." + svcName: "not found"}
+		v.Service, ok = msvc[svcName]
+		if ok {
+			mrut, ok := RUTMAP[DTANAME]
+			if ok {
+				v.Route = mrut[svcName]
+			} else {
+				message = append(message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+			}
+		} else {
+			message = append(message, fmt.Sprintf("%v.%v service not found", dtaName, svcName))
 		}
+
 	} else {
-		v = gin.H{dtaName: "not found"}
+		v.Message = dtaName + " not found"
 	}
 	c.JSON(http.StatusOK, v)
 }

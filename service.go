@@ -14,6 +14,7 @@ type ServiceTab struct {
 type Service struct {
 	Name           string `xml:"Name,attr"`
 	IFmt           string `xml:"IFmt,attr"`
+	OFmt           string `xml:"OFmt,attr"`
 	EvtIfmtBegin   string `xml:"EvtIfmtBegin"`
 	EvtIfmtEnd     string `xml:"EvtIfmtEnd"`
 	EvtAcallBegin  string `xml:"EvtAcallBegin"`
