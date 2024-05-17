@@ -113,14 +113,19 @@ func svcHandler(c *gin.Context) {
 		if ok {
 			mrut, ok := RUTMAP[DTANAME]
 			if ok {
-				v.Route = mrut[svcName]
+				v.Route, ok = mrut[svcName]
+				if !ok {
+					v.Route, ok = mrut["^"+svcName+"$"]
+					if !ok {
+						message = append(message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+					}
+				}
 			} else {
 				message = append(message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 			}
 		} else {
 			message = append(message, fmt.Sprintf("%v.%v service not found", dtaName, svcName))
 		}
-
 	} else {
 		v.Message = dtaName + " not found"
 	}
