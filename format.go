@@ -104,6 +104,7 @@ func ParseAllFormatXml() map[string]Format {
 		go parseOneFormatXml(f, ch, wg)
 	}
 	wg.Wait()
+	close(ch)
 	for f := range ch {
 		m[f.FmtName] = f
 	}
