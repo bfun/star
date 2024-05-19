@@ -3,9 +3,11 @@ package star
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"path"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type FormatTab struct {
@@ -78,7 +80,8 @@ func formatArrayToMap(formats []Format, m map[string]Format) {
 		m[v.FmtName] = v
 	}
 }
-func parseOneFormatXml(fileName string, m map[string]Format) {
+func parseOneFormatXml(fileName string, ch chan Format, wg *sync.WaitGroup) {
+	defer wg.Done()
 	fullPath := path.Join(getRootDir(), fileName)
 	decoder := getStarFileDecoder(fullPath)
 	var v FormatTab
@@ -86,15 +89,25 @@ func parseOneFormatXml(fileName string, m map[string]Format) {
 	if err != nil {
 		panic(err)
 	}
-	formatArrayToMap(v.Formats, m)
+	for _, f := range v.Formats {
+		ch <- f
+	}
 }
 
 func ParseAllFormatXml() map[string]Format {
 	m := make(map[string]Format)
 	files := getFormatFiles()
+	ch := make(chan Format, 1024*1024)
+	wg := new(sync.WaitGroup)
 	for _, f := range files {
-		parseOneFormatXml(f, m)
+		wg.Add(1)
+		go parseOneFormatXml(f, ch, wg)
 	}
+	wg.Wait()
+	for f := range ch {
+		m[f.FmtName] = f
+	}
+	log.Print("fmt count:", len(m))
 	trimFormatCDATA(m)
 	return m
 }
