@@ -2,9 +2,11 @@ package star
 
 import (
 	"encoding/xml"
+	"log"
 	"path"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type DataTransferAdapter struct {
@@ -94,7 +96,8 @@ func parseOneDtaParmXml(fileName string) DataTransferAdapter {
 	return v
 }
 
-func ParseAllDtaParmXml() map[string]DataTransferAdapter {
+func ParseAllDtaParmXml(wg *sync.WaitGroup) {
+	defer wg.Done()
 	m := make(map[string]DataTransferAdapter)
 	files := getDtaParmFiles()
 	for dta, file := range files {
@@ -103,7 +106,8 @@ func ParseAllDtaParmXml() map[string]DataTransferAdapter {
 	judgeConvertPin(m)
 	parseNESB_SDTA_NAME(m)
 	parseNESB_DDTA_NAME(m)
-	return m
+	DTAMAP = m
+	log.Print("DtaParm.xml parse success")
 }
 
 func linkServicesToDtas(svcs map[string]map[string]Service, dtas map[string]DataTransferAdapter) {

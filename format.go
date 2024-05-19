@@ -94,23 +94,25 @@ func parseOneFormatXml(fileName string, ch chan Format, wg *sync.WaitGroup) {
 	}
 }
 
-func ParseAllFormatXml() map[string]Format {
+func ParseAllFormatXml(wg *sync.WaitGroup) {
+	defer wg.Done()
 	m := make(map[string]Format)
 	files := getFormatFiles()
 	ch := make(chan Format, 1024*1024)
-	wg := new(sync.WaitGroup)
+	wg2 := new(sync.WaitGroup)
 	for _, f := range files {
-		wg.Add(1)
-		go parseOneFormatXml(f, ch, wg)
+		wg2.Add(1)
+		go parseOneFormatXml(f, ch, wg2)
 	}
-	wg.Wait()
+	wg2.Wait()
 	close(ch)
 	for f := range ch {
 		m[f.FmtName] = f
 	}
 	log.Print("fmt count:", len(m))
 	trimFormatCDATA(m)
-	return m
+	FMTMAP = m
+	log.Print("Format.xml parse success")
 }
 
 func getVarFormatName(dta, svc, format string) string {

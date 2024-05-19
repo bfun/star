@@ -1,6 +1,9 @@
 package star
 
-import "log"
+import (
+	"log"
+	"sync"
+)
 
 var ESADMIN ESAdmin
 var PROJECT Project
@@ -27,13 +30,15 @@ func init() {
 		}
 	}
 	log.Print("Project.xml parse success")
-	DTAMAP = ParseAllDtaParmXml()
-	log.Print("DtaParm.xml parse success")
-	SVCMAP = ParseAllServiceXml()
-	log.Print("Service.xml parse success")
-	RUTMAP = ParseAllRouteXml()
-	log.Print("Route.xml parse success")
-	FMTMAP = ParseAllFormatXml()
-	log.Print("Format.xml parse success")
+	wg := new(sync.WaitGroup)
+	wg.Add(1)
+	go ParseAllDtaParmXml(wg)
+	wg.Add(1)
+	go ParseAllServiceXml(wg)
+	wg.Add(1)
+	go ParseAllRouteXml(wg)
+	wg.Add(1)
+	go ParseAllFormatXml(wg)
+	wg.Wait()
 	linkServicesToDtas(SVCMAP, DTAMAP)
 }

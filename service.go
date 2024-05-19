@@ -2,9 +2,11 @@ package star
 
 import (
 	"encoding/xml"
+	"log"
 	"path"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type ServiceTab struct {
@@ -109,14 +111,16 @@ func parseOneServiceXml(fileName string) map[string]Service {
 	return serviceArrayToMap(v.Services)
 }
 
-func ParseAllServiceXml() map[string]map[string]Service {
+func ParseAllServiceXml(wg *sync.WaitGroup) {
+	defer wg.Done()
 	m := make(map[string]map[string]Service)
 	files := getServiceFiles()
 	for dta, file := range files {
 		services := parseOneServiceXml(file)
 		m[dta] = services
 	}
-	return m
+	SVCMAP = m
+	log.Print("Service.xml parse success")
 }
 
 func GetServiceNamesByDta(dta string) []string {

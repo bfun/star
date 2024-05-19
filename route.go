@@ -2,8 +2,10 @@ package star
 
 import (
 	"encoding/xml"
+	"log"
 	"path"
 	"strings"
+	"sync"
 )
 
 type RouteTab struct {
@@ -55,12 +57,14 @@ func parseOneRouteXml(fileName string) map[string]Entrance {
 	return m
 }
 
-func ParseAllRouteXml() map[string]map[string]Entrance {
+func ParseAllRouteXml(wg *sync.WaitGroup) {
+	defer wg.Done()
 	m := make(map[string]map[string]Entrance)
 	files := getRouteFiles()
 	for dta, file := range files {
 		r := parseOneRouteXml(file)
 		m[dta] = r
 	}
-	return m
+	RUTMAP = m
+	log.Print("Route.xml parse success")
 }
