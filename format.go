@@ -200,7 +200,7 @@ func findElemsInFormat2(dta, svc, format string) map[string]string {
 		return nil
 	}
 	for _, v := range f.Items {
-		if v.ItemType != "item" || v.ItemIgnr == "yes" {
+		if v.ItemType != "item" || v.ItemIgnr == "yes" || v.XmlType != "tag" {
 			continue
 		}
 		m[v.ElemName] = v.XmlName
