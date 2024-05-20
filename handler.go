@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"slices"
+	"sort"
 	"strings"
 )
 
@@ -114,15 +115,14 @@ func cltHandler(c *gin.Context) {
 func svcsHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	DTANAME := strings.ToUpper(dtaName)
-	// fmt.Printf("len(SVCMAP)=%d\n", len(SVCMAP))
 	dta, ok := SVCMAP[DTANAME]
-	// fmt.Printf("dta=%#v, ok=%v\n", dta, ok)
 	var v any
 	if ok {
 		var s []string
 		for k, _ := range dta {
 			s = append(s, k)
 		}
+		sort.Strings(s)
 		v = s
 	} else {
 		v = gin.H{dtaName: "not found"}
