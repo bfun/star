@@ -15,17 +15,35 @@ type DtaSum struct {
 }
 
 type SvcSum struct {
-	Service  Service
-	Route    Entrance
-	Message  []string
-	Request  []FmtSum
-	Response []FmtSum
+	Service       Service
+	Route         Entrance
+	Message       []string
+	Request       []FmtSum
+	Response      []FmtSum
+	RequestItems  []TagMatch
+	ResponseItems []TagMatch
 }
 
 type FmtSum struct {
 	Dta string
 	Svc string
 	Fmt string
+}
+
+type TagMatch struct {
+	SDta  string
+	SSvc  string
+	SFmt  string
+	DDta  string
+	DSvc  string
+	DFmt  string
+	Items []MatchItem
+}
+
+type MatchItem struct {
+	SvrTag string
+	Elem   string
+	CltTag string
 }
 
 func svrsHandler(c *gin.Context) {
@@ -140,6 +158,12 @@ func svcHandler(c *gin.Context) {
 	} else {
 		v.Message = append(v.Message, dtaName+" not found")
 	}
+	if len(v.Request) > 0 {
+		v.RequestItems = findMatchedTags(v.Request)
+	}
+	if len(v.Response) > 0 {
+		v.ResponseItems = findMatchedTags(v.Response)
+	}
 	c.JSON(http.StatusOK, v)
 }
 
@@ -161,6 +185,61 @@ func getServiceFormat(dta, svc string, v *SvcSum, first bool) {
 		v.Request = append(v.Request, FmtSum{Dta: dta, Svc: svc, Fmt: s.OFmt})
 		v.Response = append(v.Response, FmtSum{Dta: dta, Svc: svc, Fmt: s.IFmt})
 	}
+}
+
+func findMatchedTags(fs []FmtSum) []TagMatch {
+	if len(fs) < 2 {
+		return nil
+	}
+	s := fs[0]
+	cs := fs[1:]
+	sm := findElemsInFormat(s.Dta, s.Svc, s.Fmt)
+	var tms []TagMatch
+	for _, c := range cs {
+		cm := findElemsInFormat(c.Dta, c.Svc, c.Fmt)
+		for sf, st := range sm {
+			for cf, ct := range cm {
+				var tm TagMatch
+				tm.SDta = s.Dta
+				tm.SSvc = s.Svc
+				tm.SFmt = sf
+				tm.DDta = c.Dta
+				tm.DSvc = c.Svc
+				tm.DFmt = cf
+				for stag, selem := range st {
+					var mi MatchItem
+					mi.SvrTag = stag
+					mi.Elem = selem
+					for ctag, celem := range ct {
+						if selem == celem {
+							mi.CltTag = ctag
+							break
+						}
+					}
+					tm.Items = append(tm.Items, mi)
+				}
+				for ctag, celem := range ct {
+					matched := false
+					for _, selem := range st {
+						if selem == celem {
+							matched = true
+						}
+					}
+					if matched {
+						continue
+					}
+					var mi MatchItem
+					mi.Elem = celem
+					mi.CltTag = ctag
+					tm.Items = append(tm.Items, mi)
+				}
+				if len(tm.Items) > 0 {
+					tms = append(tms, tm)
+				}
+			}
+		}
+	}
+	return tms
 }
 
 func rutsHandler(c *gin.Context) {
