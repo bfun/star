@@ -21,13 +21,14 @@ type Format struct {
 	SubFmts []string
 }
 type FormatItem struct {
-	ItemType string `xml:"ItemType,attr"`
-	ItemIgnr string `xml:"ItemIgnr,attr"`
-	ElemName string `xml:"ElemName,attr"`
-	XmlType  string `xml:"XmlType,attr"`
-	XmlName  string `xml:"XmlName,attr"`
-	SubName  string `xml:"SubName,attr"`
-	SubExpr  string `xml:"SubExpr"`
+	ItemType  string `xml:"ItemType,attr"`
+	ItemIgnr  string `xml:"ItemIgnr,attr"`
+	ElemName  string `xml:"ElemName,attr"`
+	XmlType   string `xml:"XmlType,attr"`
+	XmlName   string `xml:"XmlName,attr"`
+	SubName   string `xml:"SubName,attr"`
+	SubExpr   string `xml:"SubExpr"`
+	ConstData string `xml:"ConstData"`
 }
 
 func trimFormatCDATA(formats map[string]Format) {
@@ -69,6 +70,11 @@ func trimFormatCDATA(formats map[string]Format) {
 				vf.Items[ki].SubExpr = s
 			} else {
 				vf.Items[ki].SubExpr = ""
+			}
+			if vi.XmlType == "attr" && vi.ItemType == "item" && vi.ItemIgnr == "no" {
+				vf.Items[ki].ConstData = strings.TrimSpace(vi.ConstData)
+			} else {
+				vf.Items[ki].ConstData = ""
 			}
 		}
 		formats[kf] = vf
@@ -199,8 +205,16 @@ func findElemsInFormat2(dta, svc, format string) map[string]string {
 		fmt.Println(dta, svc, format, "format not found")
 		return nil
 	}
+	constId := 1
 	for _, v := range f.Items {
-		if v.ItemType != "item" || v.ItemIgnr == "yes" || v.XmlType != "tag" {
+		if v.ItemType != "item" || v.ItemIgnr == "yes" {
+			continue
+		}
+		if v.XmlType == "attr" && len(v.ConstData) > 0 {
+			k := fmt.Sprintf("常量 %d: [%s]", constId, v.ConstData)
+			m[k] = v.XmlName
+		}
+		if v.XmlType != "tag" {
 			continue
 		}
 		m[v.ElemName] = v.XmlName
