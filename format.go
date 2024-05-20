@@ -191,3 +191,29 @@ func findElemsInFormat(dta, svc, format string) map[string]map[string]string {
 	}
 	return fm
 }
+
+func findElemsInFormat2(dta, svc, format string) map[string]string {
+	m := make(map[string]string)
+	f, ok := FMTMAP[format]
+	if !ok {
+		fmt.Println(dta, svc, format, "format not found")
+		return nil
+	}
+	for _, v := range f.Items {
+		if v.ItemType != "item" || v.ItemIgnr == "yes" {
+			continue
+		}
+		m[v.ElemName] = v.XmlName
+	}
+	for _, sub := range f.SubFmts {
+		sub2 := getVarFormatName(dta, svc, sub)
+		if sub2 != sub {
+			fmt.Printf("getVarFormatName %v.%v %v -> %v\n", dta, svc, sub, sub2)
+		}
+		m2 := findElemsInFormat2(dta, svc, sub2)
+		for k, v := range m2 {
+			m[k] = v
+		}
+	}
+	return m
+}

@@ -193,50 +193,39 @@ func findMatchedTags(fs []FmtSum) []TagMatch {
 	}
 	s := fs[0]
 	cs := fs[1:]
-	sm := findElemsInFormat(s.Dta, s.Svc, s.Fmt)
+	sm := findElemsInFormat2(s.Dta, s.Svc, s.Fmt)
 	var tms []TagMatch
 	for _, c := range cs {
-		cm := findElemsInFormat(c.Dta, c.Svc, c.Fmt)
-		for sf, st := range sm {
-			for cf, ct := range cm {
-				var tm TagMatch
-				tm.SDta = s.Dta
-				tm.SSvc = s.Svc
-				tm.SFmt = sf
-				tm.DDta = c.Dta
-				tm.DSvc = c.Svc
-				tm.DFmt = cf
-				for stag, selem := range st {
-					var mi MatchItem
-					mi.SvrTag = stag
-					mi.Elem = selem
-					for ctag, celem := range ct {
-						if selem == celem {
-							mi.CltTag = ctag
-							break
-						}
-					}
-					tm.Items = append(tm.Items, mi)
-				}
-				for ctag, celem := range ct {
-					matched := false
-					for _, selem := range st {
-						if selem == celem {
-							matched = true
-						}
-					}
-					if matched {
-						continue
-					}
-					var mi MatchItem
-					mi.Elem = celem
-					mi.CltTag = ctag
-					tm.Items = append(tm.Items, mi)
-				}
-				if len(tm.Items) > 0 {
-					tms = append(tms, tm)
-				}
+		cm := findElemsInFormat2(c.Dta, c.Svc, c.Fmt)
+		var tm TagMatch
+		tm.SDta = s.Dta
+		tm.SSvc = s.Svc
+		tm.SFmt = s.Fmt
+		tm.DDta = c.Dta
+		tm.DSvc = c.Svc
+		tm.DFmt = c.Fmt
+		for se, st := range sm {
+			var mi MatchItem
+			mi.SvrTag = st
+			mi.Elem = se
+			ct, ok := cm[se]
+			if ok {
+				mi.CltTag = ct
 			}
+			tm.Items = append(tm.Items, mi)
+		}
+		for ce, ct := range cm {
+			_, ok := sm[ce]
+			if ok {
+				continue
+			}
+			var mi MatchItem
+			mi.Elem = ce
+			mi.CltTag = ct
+			tm.Items = append(tm.Items, mi)
+		}
+		if len(tm.Items) > 0 {
+			tms = append(tms, tm)
 		}
 	}
 	return tms
