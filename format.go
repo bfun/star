@@ -71,11 +71,7 @@ func trimFormatCDATA(formats map[string]Format) {
 			} else {
 				vf.Items[ki].SubExpr = ""
 			}
-			if vi.XmlType == "attr" && vi.ItemType == "item" && vi.ItemIgnr == "no" {
-				vf.Items[ki].ConstData = strings.TrimSpace(vi.ConstData)
-			} else {
-				vf.Items[ki].ConstData = ""
-			}
+			vf.Items[ki].ConstData = strings.TrimSpace(vi.ConstData)
 		}
 		formats[kf] = vf
 	}
@@ -210,7 +206,7 @@ func findElemsInFormat2(dta, svc, format string) map[string]string {
 		if v.ItemType != "item" || v.ItemIgnr == "yes" {
 			continue
 		}
-		if v.XmlType == "attr" && len(v.ConstData) > 0 {
+		if len(v.ConstData) > 0 {
 			k := fmt.Sprintf("常量 %d: [%s]", constId, v.ConstData)
 			m[k] = v.XmlName
 		}
