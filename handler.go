@@ -1,9 +1,11 @@
 package star
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"slices"
 	"strings"
 )
 
@@ -204,6 +206,7 @@ func findMatchedTags(fs []FmtSum) []TagMatch {
 		tm.DDta = c.Dta
 		tm.DSvc = c.Svc
 		tm.DFmt = c.Fmt
+		var svrOnly []MatchItem
 		for se, st := range sm {
 			var mi MatchItem
 			mi.SvrTag = st
@@ -211,9 +214,19 @@ func findMatchedTags(fs []FmtSum) []TagMatch {
 			ct, ok := cm[se]
 			if ok {
 				mi.CltTag = ct
+				tm.Items = append(tm.Items, mi)
+			} else {
+				svrOnly = append(svrOnly, mi)
 			}
-			tm.Items = append(tm.Items, mi)
 		}
+		slices.SortFunc(tm.Items, func(a, b MatchItem) int {
+			return cmp.Compare(strings.ToLower(a.SvrTag), strings.ToLower(b.SvrTag))
+		})
+		slices.SortFunc(svrOnly, func(a, b MatchItem) int {
+			return cmp.Compare(strings.ToLower(a.SvrTag), strings.ToLower(b.SvrTag))
+		})
+		tm.Items = append(tm.Items, svrOnly...)
+		var cltOnly []MatchItem
 		for ce, ct := range cm {
 			_, ok := sm[ce]
 			if ok {
@@ -222,8 +235,12 @@ func findMatchedTags(fs []FmtSum) []TagMatch {
 			var mi MatchItem
 			mi.Elem = ce
 			mi.CltTag = ct
-			tm.Items = append(tm.Items, mi)
+			cltOnly = append(cltOnly, mi)
 		}
+		slices.SortFunc(cltOnly, func(a, b MatchItem) int {
+			return cmp.Compare(strings.ToLower(a.CltTag), strings.ToLower(b.CltTag))
+		})
+		tm.Items = append(tm.Items, cltOnly...)
 		if len(tm.Items) > 0 {
 			tms = append(tms, tm)
 		}
