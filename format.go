@@ -209,6 +209,7 @@ func findElemsInFormat2(dta, svc, format string) map[string]string {
 		if len(v.ConstData) > 0 {
 			k := fmt.Sprintf("常量 %d: [%s]", constId, v.ConstData)
 			m[k] = v.XmlName
+			constId++
 		}
 		if v.XmlType != "tag" {
 			continue
