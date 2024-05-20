@@ -211,7 +211,7 @@ func findElemsInFormat2(dta, svc, format string) map[string]string {
 			m[k] = v.XmlName
 			constId++
 		}
-		if v.XmlType != "tag" {
+		if v.XmlType != "tag" || v.ElemName == "" {
 			continue
 		}
 		m[v.ElemName] = v.XmlName
