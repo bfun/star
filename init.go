@@ -1,6 +1,7 @@
 package star
 
 import (
+	"github.com/bfun/cjsonsource"
 	"log"
 	"sync"
 )
@@ -13,6 +14,7 @@ var DTAMAP map[string]DataTransferAdapter
 var SVCMAP map[string]map[string]Service
 var RUTMAP map[string]map[string]Entrance
 var FMTMAP map[string]Format
+var JSONMAP map[string]map[string]cjsonsource.SvcFunc
 
 func init() {
 	ESADMIN = ParseESAdminFile()
@@ -39,6 +41,11 @@ func init() {
 	go ParseAllRouteXml(wg)
 	wg.Add(1)
 	go ParseAllFormatXml(wg)
+	wg.Add(1)
+	go func(wg *sync.WaitGroup) {
+		defer wg.Done()
+		JSONMAP = cjsonsource.ParseJsonSourceJson()
+	}(wg)
 	wg.Wait()
 	linkServicesToDtas(SVCMAP, DTAMAP)
 }

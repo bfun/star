@@ -161,10 +161,10 @@ func svcHandler(c *gin.Context) {
 		v.Message = append(v.Message, dtaName+" not found")
 	}
 	if len(v.Request) > 0 {
-		v.RequestItems = findMatchedTags(v.Request)
+		v.RequestItems = findMatchedTags(v.Request, true)
 	}
 	if len(v.Response) > 0 {
-		v.ResponseItems = findMatchedTags(v.Response)
+		v.ResponseItems = findMatchedTags(v.Response, false)
 	}
 	c.JSON(http.StatusOK, v)
 }
@@ -189,16 +189,16 @@ func getServiceFormat(dta, svc string, v *SvcSum, first bool) {
 	}
 }
 
-func findMatchedTags(fs []FmtSum) []TagMatch {
+func findMatchedTags(fs []FmtSum, req bool) []TagMatch {
 	if len(fs) < 2 {
 		return nil
 	}
 	s := fs[0]
 	cs := fs[1:]
-	sm := findElemsInFormat2(s.Dta, s.Svc, s.Fmt)
+	sm := findServiceElems(s.Dta, s.Svc, s.Fmt, req)
 	var tms []TagMatch
 	for _, c := range cs {
-		cm := findElemsInFormat2(c.Dta, c.Svc, c.Fmt)
+		cm := findServiceElems(c.Dta, c.Svc, c.Fmt, req)
 		var tm TagMatch
 		tm.SDta = s.Dta
 		tm.SSvc = s.Svc

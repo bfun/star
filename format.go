@@ -228,3 +228,21 @@ func findElemsInFormat2(dta, svc, format string) map[string]string {
 	}
 	return m
 }
+
+func findServiceElems(dtaName, svcName, fmtName string, req bool) map[string]string {
+	if fmtName != "" {
+		return findElemsInFormat2(dtaName, svcName, fmtName)
+	}
+	dta, ok := JSONMAP[dtaName]
+	if ok {
+		svc, ok := dta[svcName]
+		if ok {
+			if req {
+				return svc.InTags
+			} else {
+				return svc.OutTags
+			}
+		}
+	}
+	return nil
+}
