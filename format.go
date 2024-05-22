@@ -237,7 +237,7 @@ func findServiceElems(dtaName, svcName, fmtName string, req bool) map[string]str
 	if ok {
 		svc, ok := dta[svcName]
 		if ok {
-			if req {
+			if strings.HasSuffix(dtaName, "_SVR") && req || strings.HasSuffix(dtaName, "_CLT") && !req {
 				return svc.InTags
 			} else {
 				return svc.OutTags
