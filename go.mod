@@ -3,7 +3,7 @@ module github.com/bfun/star
 go 1.22.3
 
 require (
-	github.com/bfun/cjsonsource v0.0.49
+	github.com/bfun/cjsonsource v0.0.51
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	golang.org/x/text v0.15.0
