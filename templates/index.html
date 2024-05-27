@@ -12,9 +12,9 @@
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <dl class="layui-nav-child">
+                    <dl class="layui-nav-child" id="dtaPortsNav">
                         {{ range . }}
-                        <dd><a href="javascript:;">{{ .Name }}:{{ .Port }}</a></dd>
+                        <dd>{{ .Name }}:{{ .Port }}</dd>
                         {{ end }}
                     </dl>
                 </li>
@@ -31,7 +31,7 @@
                 <div class="layui-card-header">
                     下面是充数内容，为的是出现滚动条
                 </div>
-                <div class="layui-card-body">
+                <div class="layui-card-body" id="main-body">
                     充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>你还真滑到了底部呀
                 </div>
             </div>
@@ -42,8 +42,13 @@
     </div>
 </div>
 <style>
+    dd{
+        padding-left: 20px;
+        cursor: pointer;
+    }
 </style>
 <script src="static/layui/layui.js"></script>
+<script src="static/axios/axios.min.js"></script>
 <script>
     //JS
     layui.use(['element', 'layer', 'util'], function(){
@@ -70,6 +75,23 @@
                 });
             }
         });
+    });
+    const getCodes = (dta) => {
+        axios.get('http://28.4.199.2:8000/svcs/'+dta).then((response) => {
+            document.getElementById('main-body').innerHTML = response.data
+        })
+            .catch(error => {
+                console.error('Error fetching data: ', error);
+            });
+    }
+    document.querySelector('#dtaPortsNav').addEventListener('click', function(event) {
+        // 检查点击的是否是我们想要的子元素
+        if (event.target.tagName !== 'dd') {
+            return
+        }
+        let dtaPort = event.target.textContent;
+        let dtaName = dtaPort.split(":")[0].trim()
+        getCodes(dtaName)
     });
 </script>
 </body>
