@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>交换平台报文字段映射查看工具</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        {{ range . }}
+        <li>{{ .Name }}:{{ .Port }}</li>
+        {{ end }}
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show" id="tab-content"></div>
+    </div>
+</div>
+</body>
+<style>
+    .layui-tab-title li{
+        display: list-item;
+    }
+</style>
+</html>

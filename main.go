@@ -8,6 +8,8 @@ import (
 func Main() {
 	r := gin.Default()
 	r.Use(cors.Default())
+	r.Static("/static/", "./static")
+	r.LoadHTMLGlob("templates/*.html")
 	r.GET("/svrs", svrsHandler)
 	r.GET("/svr/:dta", svrHandler)
 	r.GET("/clts", cltsHandler)
@@ -19,5 +21,6 @@ func Main() {
 	r.GET("/fmta", fmtaHandler)
 	r.GET("/fmts/:sub", fmtsHandler)
 	r.GET("/fmt/:dta/:svc/:fmt", fmtHandler)
+	r.GET("/", indexHandler)
 	r.Run(":8000")
 }
