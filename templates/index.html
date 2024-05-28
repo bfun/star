@@ -32,6 +32,7 @@
                     下面是充数内容，为的是出现滚动条
                 </div>
                 <div class="layui-card-body" id="main-body">
+                    <div id="codes"></div>
                     充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>你还真滑到了底部呀
                 </div>
             </div>
@@ -44,6 +45,10 @@
 <style>
     dd{
         padding-left: 20px;
+        cursor: pointer;
+    }
+    #codes span{
+        margin: 5px;
         cursor: pointer;
     }
 </style>
@@ -78,7 +83,7 @@
     });
     const getCodes = (dta) => {
         axios.get('http://28.4.199.2:8000/svcs/'+dta).then((response) => {
-            document.getElementById('main-body').innerHTML = response.data
+            document.getElementById('codes').innerHTML = response.data
         })
             .catch(error => {
                 console.error('Error fetching data: ', error);
