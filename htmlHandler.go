@@ -1,6 +1,7 @@
 package star
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"sort"
@@ -39,4 +40,44 @@ func codesHandler(c *gin.Context) {
 	}
 	sort.Strings(s)
 	c.HTML(http.StatusOK, "codes.html", s)
+}
+
+func detailHandler(c *gin.Context) {
+	dtaName := c.Param("dta")
+	svcName := c.Param("svc")
+	DTANAME := strings.ToUpper(dtaName)
+	msvc, ok := SVCMAP[DTANAME]
+	var v SvcSum
+	if ok {
+		v.Service, ok = msvc[svcName]
+		if ok {
+			mrut, ok := RUTMAP[DTANAME]
+			if ok {
+				v.Route, ok = mrut[svcName]
+				if !ok {
+					v.Route, ok = mrut["^"+svcName+"$"]
+					if !ok {
+						v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+					}
+				}
+			} else {
+				v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
+			}
+			getServiceFormat(DTANAME, svcName, &v, true)
+			if v.Route.DstType == "DTA" && v.Route.Destination != "" && v.Route.SvcName != "" {
+				getServiceFormat(v.Route.Destination, v.Route.SvcName, &v, false)
+			}
+		} else {
+			v.Message = append(v.Message, fmt.Sprintf("%v.%v service not found", dtaName, svcName))
+		}
+	} else {
+		v.Message = append(v.Message, dtaName+" not found")
+	}
+	if len(v.Request) > 0 {
+		v.RequestItems = findMatchedTags(v.Request, true)
+	}
+	if len(v.Response) > 0 {
+		v.ResponseItems = findMatchedTags(v.Response, false)
+	}
+	c.HTML(http.StatusOK, "detail.html", v)
 }

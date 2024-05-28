@@ -22,6 +22,7 @@ func Main() {
 	r.GET("/fmts/:sub", fmtsHandler)
 	r.GET("/fmt/:dta/:svc/:fmt", fmtHandler)
 	r.GET("/codes/:dta", codesHandler)
+	r.GET("/detail/:dta/:svc", detailHandler)
 	r.GET("/", indexHandler)
 	r.Run(":8000")
 }

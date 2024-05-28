@@ -1,0 +1,22 @@
+{{ range $i, $v := .RequestItems }}
+    <div>请求 {{ $i+1 }}: {{ $v.SDta }}.{{ $v.SSvc }}.{{ $v.SFmt }} -> {{ $v.DDta }}.{{ $v.DSvc }}.{{ $v.DFmt }}</div>
+    <table class="layui-table">
+        <thead><th>序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
+        <tbody>
+        {{ range $j, $it := $v.Items }}
+        <tr><td>{{ $j+1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
+        {{ end }}
+        </tbody>
+    </table>
+{{ end }}
+{{ range $i, $v := .ResponseItems }}
+    <div>响应 {{ $i+1 }}: {{ $v.SDta }}.{{ $v.SSvc }}.{{ $v.SFmt }} -> {{ $v.DDta }}.{{ $v.DSvc }}.{{ $v.DFmt }}</div>
+    <table class="layui-table">
+        <thead><th>序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
+        <tbody>
+        {{ range $j, $it := $v.Items }}
+        <tr><td>{{ $j+1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
+        {{ end }}
+        </tbody>
+    </table>
+{{ end }}
