@@ -39,11 +39,9 @@
         margin: 5px;
         cursor: pointer;
     }
-    th.col1, td.col1 {
-        width: 50px;
-    }
-    .layui-table th, .layui-table td {
-        width: 150px;
+    .layui-table {
+        table-layout: fixed;
+        width: 1000px;
     }
 </style>
 <script src="static/layui/layui.js"></script>
@@ -55,8 +53,8 @@
         if (event.target.tagName !== 'DD') {
             return
         }
-        document.getElementById('codes').content = '';
-        document.getElementById('detail').content = '';
+        document.getElementById('codes').innerHTML = '';
+        document.getElementById('detail').innerHTML = '';
         let dtaPort = event.target.textContent;
         let dtaName = dtaPort.split(":")[0].trim()
         axios.get('http://28.4.199.2:8000/codes/'+dtaName).then((response) => {
@@ -73,7 +71,7 @@
         if (event.target.tagName !== 'SPAN') {
             return
         }
-        document.getElementById('detail').content = '';
+        document.getElementById('detail').innerHTML = '';
         let code = event.target.textContent;
         axios.get('http://28.4.199.2:8000/detail/'+DTA+'/'+code).then((response) => {
             document.getElementById('detail').innerHTML = response.data

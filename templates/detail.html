@@ -8,10 +8,14 @@
     </div>
     <div class="layui-card-body">
         <table class="layui-table">
+            <colgroup>
+                <col span="1" style="width: 10%;">
+                <col span="3" style="width: 30%;">
+            </colgroup>
             <thead><th class="col1">序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
             <tbody>
             {{ range $j, $it := $v.Items }}
-            <tr><td class="col1">{{ add $j 1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
+            <tr><td>{{ add $j 1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
             {{ end }}
             </tbody>
         </table>
@@ -26,10 +30,14 @@
     </div>
     <div class="layui-card-body">
         <table class="layui-table">
-            <thead><th class="col1">序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
+            <colgroup>
+                <col span="1" style="width: 10%;">
+                <col span="3" style="width: 30%;">
+            </colgroup>
+            <thead><th>序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
             <tbody>
             {{ range $j, $it := $v.Items }}
-            <tr><td class="col1">{{ add $j 1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
+            <tr><td>{{ add $j 1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
             {{ end }}
             </tbody>
         </table>

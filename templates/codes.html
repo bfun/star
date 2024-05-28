@@ -1,7 +1,7 @@
 <div class="layui-card layui-panel">
-    <div class="layui-card-header">{{ .DtaName : .Port}}</div>
+    <div class="layui-card-header">{{ .DtaName }} : {{ .Port }}</div>
     <div class="layui-card-body">
-        {{ range . }}
+        {{ range .Codes }}
         <span>{{ . }}</span>
         {{ end }}
     </div>
