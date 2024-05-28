@@ -1,8 +1,10 @@
-<div class="layui-card layui-panel">
-    <div class="layui-card-header">{{ .DtaName }} : {{ .Port }}</div>
-    <div class="layui-card-body">
-        {{ range .Codes }}
-        <span>{{ . }}</span>
-        {{ end }}
+<div class="layui-collapse">
+    <div class="layui-colla-item">
+        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }}</div>
+        <div class="layui-colla-content">
+            {{ range .Codes }}
+            <span>{{ . }}</span>
+            {{ end }}
+        </div>
     </div>
 </div>
