@@ -1,3 +1,8 @@
-{{ range . }}
-<span>{{ . }}</span>
-{{ end }}
+<div class="layui-card layui-panel">
+    <div class="layui-card-header">{{ .DtaName : .Port}}</div>
+    <div class="layui-card-body">
+        {{ range . }}
+        <span>{{ . }}</span>
+        {{ end }}
+    </div>
+</div>

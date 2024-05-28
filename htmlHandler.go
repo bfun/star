@@ -10,21 +10,27 @@ import (
 
 func indexHandler(c *gin.Context) {
 	var dtas []DtaSum
-	for _, v := range ESADMIN.DtaParms {
-		if !isSVR(v.DtaName) {
+	for _, d := range ESADMIN.DtaParms {
+		if !isSVR(d.DtaName) {
 			continue
 		}
-		dta := DtaSum{Name: v.DtaName}
+		dta := DtaSum{Name: d.DtaName}
 		var ports []string
-		for _, v := range v.IPTabItems {
-			if v.Port != "" {
-				ports = append(ports, v.Port)
+		for _, i := range d.IPTabItems {
+			if i.Port != "" {
+				ports = append(ports, i.Port)
 			}
 		}
 		dta.Port = strings.Join(ports, ",")
 		dtas = append(dtas, dta)
 	}
 	c.HTML(http.StatusOK, "index.html", dtas)
+}
+
+type CodesSum struct {
+	DtaName string
+	Port    string
+	Codes   []string
 }
 
 func codesHandler(c *gin.Context) {
@@ -39,7 +45,22 @@ func codesHandler(c *gin.Context) {
 		s = append(s, k)
 	}
 	sort.Strings(s)
-	c.HTML(http.StatusOK, "codes.html", s)
+	var v CodesSum
+	v.DtaName = dtaName
+	for _, d := range ESADMIN.DtaParms {
+		if d.DtaName != DTANAME {
+			continue
+		}
+		var ports []string
+		for _, i := range d.IPTabItems {
+			if i.Port != "" {
+				ports = append(ports, i.Port)
+			}
+		}
+		v.Port = strings.Join(ports, ",")
+	}
+	v.Codes = s
+	c.HTML(http.StatusOK, "codes.html", v)
 }
 
 func detailHandler(c *gin.Context) {

@@ -3,12 +3,18 @@ package star
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"html/template"
 )
 
 func Main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.Static("/static/", "./static")
+	r.SetFuncMap(template.FuncMap{
+		"add": func(a, b int) int {
+			return a + b
+		},
+	})
 	r.LoadHTMLGlob("templates/*.html")
 	r.GET("/svrs", svrsHandler)
 	r.GET("/svr/:dta", svrHandler)

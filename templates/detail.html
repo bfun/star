@@ -1,22 +1,38 @@
+<blockquote class="layui-elem-quote layui-text">
+    {{ .Service.Name }}
+</blockquote>
 {{ range $i, $v := .RequestItems }}
-    <div>请求 {{ $i+1 }}: {{ $v.SDta }}.{{ $v.SSvc }}.{{ $v.SFmt }} -> {{ $v.DDta }}.{{ $v.DSvc }}.{{ $v.DFmt }}</div>
-    <table class="layui-table">
-        <thead><th>序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
-        <tbody>
-        {{ range $j, $it := $v.Items }}
-        <tr><td>{{ $j+1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
-        {{ end }}
-        </tbody>
-    </table>
+<div class="layui-card layui-panel">
+    <div class="layui-card-header">
+        请求 {{ add $i 1 }}: {{ $v.SDta }}.{{ $v.SSvc }}.{{ $v.SFmt }} -> {{ $v.DDta }}.{{ $v.DSvc }}.{{ $v.DFmt }}
+    </div>
+    <div class="layui-card-body">
+        <table class="layui-table">
+            <thead><th class="col1">序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
+            <tbody>
+            {{ range $j, $it := $v.Items }}
+            <tr><td>{{ add $j 1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{ end }}
+
 {{ range $i, $v := .ResponseItems }}
-    <div>响应 {{ $i+1 }}: {{ $v.SDta }}.{{ $v.SSvc }}.{{ $v.SFmt }} -> {{ $v.DDta }}.{{ $v.DSvc }}.{{ $v.DFmt }}</div>
-    <table class="layui-table">
-        <thead><th>序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
-        <tbody>
-        {{ range $j, $it := $v.Items }}
-        <tr><td>{{ $j+1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
-        {{ end }}
-        </tbody>
-    </table>
+<div class="layui-card layui-panel">
+    <div class="layui-card-header">
+        响应 {{ add $i 1 }}: {{ $v.SDta }}.{{ $v.SSvc }}.{{ $v.SFmt }} <- {{ $v.DDta }}.{{ $v.DSvc }}.{{ $v.DFmt }}
+    </div>
+    <div class="layui-card-body">
+        <table class="layui-table">
+            <thead><th class="col1">序号</th><th>消费方标签</th><th>数据元素</th><th>服务方标签</th></thead>
+            <tbody>
+            {{ range $j, $it := $v.Items }}
+            <tr><td>{{ add $j 1 }}</td><td>{{ $it.SvrTag }}</td><td>{{ $it.Elem }}</td><td>{{ $it.CltTag }}</td></tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{ end }}

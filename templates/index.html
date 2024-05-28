@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="static/layui/css/layui.css">
 </head>
 <body>
-<div class="layui-layout layui-layout-admin">
-    <div class="layui-side layui-bg-black">
+<div class="layui-layout">
+    <div class="layui-side">
         <div class="layui-side-scroll">
-            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+            <ul class="layui-nav layui-nav-tree">
                 <li class="layui-nav-item layui-nav-itemed">
                     <dl class="layui-nav-child" id="dtaPortsNav">
                         {{ range . }}
@@ -24,16 +24,8 @@
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-            <blockquote class="layui-elem-quote layui-text">
-                Layui 框体布局内容主体区域
-            </blockquote>
-            <div class="layui-card layui-panel">
-                <div class="layui-card-header" id="dta-port"></div>
-                <div class="layui-card-body">
-                    <div id="codes"></div>
-                    <div id="detail"></div>
-                </div>
-            </div>
+            <div id="codes"></div>
+            <div id="detail"></div>
             <br><br>
         </div>
     </div>
@@ -50,10 +42,10 @@
         cursor: pointer;
     }
     th.col1, td.col1 {
-        width: 50px;
+        width: 25px;
     }
     th.col2, td.col2, th.col3, td.col3, th.col4, td.col4{
-        width: 150px;
+        width: 100px;
     }
 </style>
 <script src="static/layui/layui.js"></script>
