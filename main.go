@@ -30,5 +30,5 @@ func Main() {
 	r.GET("/codes/:dta", codesHandler)
 	r.GET("/detail/:dta/:svc", detailHandler)
 	r.GET("/", indexHandler)
-	r.Run(":8000")
+	r.Run(":8080")
 }

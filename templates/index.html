@@ -43,6 +43,9 @@
         table-layout: fixed;
         width: 1000px;
     }
+    .layui-body{
+        width: 85%;
+    }
 </style>
 <script src="static/layui/layui.js"></script>
 <script src="static/axios/axios.min.js"></script>
@@ -57,7 +60,7 @@
         document.getElementById('detail').innerHTML = '';
         let dtaPort = event.target.textContent;
         let dtaName = dtaPort.split(":")[0].trim()
-        axios.get('http://28.4.199.2:8000/codes/'+dtaName).then((response) => {
+        axios.get('http://28.4.199.2:8080/codes/'+dtaName).then((response) => {
             document.getElementById('codes').innerHTML = response.data
         })
             .catch(error => {
@@ -73,7 +76,7 @@
         }
         document.getElementById('detail').innerHTML = '';
         let code = event.target.textContent;
-        axios.get('http://28.4.199.2:8000/detail/'+DTA+'/'+code).then((response) => {
+        axios.get('http://28.4.199.2:8080/detail/'+DTA+'/'+code).then((response) => {
             document.getElementById('detail').innerHTML = response.data
         })
             .catch(error => {
