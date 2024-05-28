@@ -1,6 +1,6 @@
 <div class="layui-collapse">
     <div class="layui-colla-item">
-        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }}</div>
+        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} ( {{ len .Codes }} )</div>
         <div class="layui-colla-content">
             {{ range .Codes }}
             <span>{{ . }}</span>

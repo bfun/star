@@ -14,6 +14,9 @@ func Main() {
 		"add": func(a, b int) int {
 			return a + b
 		},
+		"len": func(a []any) int {
+			return len(a)
+		},
 	})
 	r.LoadHTMLGlob("templates/*.html")
 	/*
