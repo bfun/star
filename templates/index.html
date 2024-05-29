@@ -52,37 +52,42 @@
 <script>
     let DTA = '';
     document.getElementById('dtaPortsNav').addEventListener('click', function(event) {
-        // 检查点击的是否是我们想要的子元素
         if (event.target.tagName !== 'DD') {
-            return
+            return;
         }
         document.getElementById('codes').innerHTML = '';
         document.getElementById('detail').innerHTML = '';
         let dtaPort = event.target.textContent;
-        let dtaName = dtaPort.split(":")[0].trim()
+        let dtaName = dtaPort.split(":")[0].trim();
         axios.get('http://28.4.199.2:8080/codes/'+dtaName).then((response) => {
-            document.getElementById('codes').innerHTML = response.data
+            document.getElementById('codes').innerHTML = response.data;
+            rerender();
         })
             .catch(error => {
                 console.error('Error fetching data: ', error);
             });
-        DTA = dtaName
+        DTA = dtaName;
     });
     document.getElementById('codes').addEventListener('click', function(event) {
-        console.log(event)
-        // 检查点击的是否是我们想要的子元素
         if (event.target.tagName !== 'SPAN') {
-            return
+            return;
         }
         document.getElementById('detail').innerHTML = '';
         let code = event.target.textContent;
         axios.get('http://28.4.199.2:8080/detail/'+DTA+'/'+code).then((response) => {
-            document.getElementById('detail').innerHTML = response.data
+            document.getElementById('detail').innerHTML = response.data;
+            rerender();
         })
             .catch(error => {
                 console.error('Error fetching data: ', error);
             });
     });
+    const rerender = () => {
+        layui.use(['element', 'table'], function () {
+            layui.element.render();
+            layui.table.render();
+        });
+    }
 </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"html/template"
+	"time"
 )
 
 func Main() {
@@ -19,6 +20,12 @@ func Main() {
 		},
 	})
 	r.LoadHTMLGlob("templates/*.html")
+	go func() {
+		for {
+			r.LoadHTMLGlob("templates/*.html")
+			time.Sleep(3 * time.Second)
+		}
+	}()
 	/*
 		r.GET("/svrs", svrsHandler)
 		r.GET("/svr/:dta", svrHandler)
