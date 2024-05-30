@@ -15,7 +15,7 @@ func Main() {
 		"add": func(a, b int) int {
 			return a + b
 		},
-		"len": func(a []any) int {
+		"len": func(a []string) int {
 			return len(a)
 		},
 	})
