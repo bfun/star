@@ -81,7 +81,7 @@ func detailHandler(c *gin.Context) {
 						v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 					}
 					if v.Route.DstType == "ALA" {
-						flowHandler(c)
+						flowWrapperHandler(c)
 						return
 					}
 				}
@@ -110,6 +110,13 @@ func detailHandler(c *gin.Context) {
 type FlowSum struct {
 	DtaName string
 	SvcName string
+}
+
+func flowWrapperHandler(c *gin.Context) {
+	dtaName := c.Param("dta")
+	svcName := c.Param("svc")
+	var v = FlowSum{dtaName, svcName}
+	c.HTML(http.StatusOK, "flow-wrapper.html", v)
 }
 
 func flowHandler(c *gin.Context) {
