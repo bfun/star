@@ -41,6 +41,7 @@ func Main() {
 	*/
 	r.GET("/codes/:dta", codesHandler)
 	r.GET("/detail/:dta/:svc", detailHandler)
+	r.GET("/flow", flowHandler)
 	r.GET("/", indexHandler)
 	r.Run(":8080")
 }

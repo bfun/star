@@ -1,0 +1,10 @@
+<blockquote class="layui-elem-quote layui-text">
+    {{ .SvcName }}
+</blockquote>
+<div class="mermaid">
+    graph LR
+    {{ .DtaName }}.{{ .SvcName }}[开始] --> B{决策}
+    B -- 是 --> C[结束]
+    B -- 否 --> D[返回]
+</div>
+<script src="static/mermaid/mermaid.min.js"></script>

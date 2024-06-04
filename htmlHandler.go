@@ -80,6 +80,10 @@ func detailHandler(c *gin.Context) {
 					if !ok {
 						v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 					}
+					if v.Route.DstType == "ALA" {
+						flowHandler(c)
+						return
+					}
 				}
 			} else {
 				v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
@@ -101,4 +105,16 @@ func detailHandler(c *gin.Context) {
 		v.ResponseItems = findMatchedTags(v.Response, false)
 	}
 	c.HTML(http.StatusOK, "detail.html", v)
+}
+
+type FlowSum struct {
+	DtaName string
+	SvcName string
+}
+
+func flowHandler(c *gin.Context) {
+	dtaName := c.Param("dta")
+	svcName := c.Param("svc")
+	var v = FlowSum{dtaName, svcName}
+	c.HTML(http.StatusOK, "flow.html", v)
 }
