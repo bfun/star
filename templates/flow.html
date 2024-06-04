@@ -1,10 +1,14 @@
 <blockquote class="layui-elem-quote layui-text">
     {{ .SvcName }}
 </blockquote>
-<div class="mermaid">
-    graph LR
-    {{ .DtaName }}.{{ .SvcName }}[开始] --> B{决策}
-    B -- 是 --> C[结束]
-    B -- 否 --> D[返回]
-</div>
-<script src="static/mermaid/mermaid.min.js"></script>
+<pre class="mermaid">
+        graph TD
+        A[Client] --> B[Load Balancer]
+        B --> C[Server01]
+        B --> D[Server02]
+        {{ .DtaName }} --> {{ .SvcName }}
+</pre>
+<script type="module">
+    import mermaid from '/static/mermaid/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+</script>
