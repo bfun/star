@@ -181,3 +181,13 @@ func getFlowFiles() map[string]string {
 	}
 	return m
 }
+
+func getSvcLogicFiles() map[string]string {
+	m := make(map[string]string)
+	for _, v := range PROJECT.Apps {
+		for _, sub := range v.SubApps {
+			m[sub.Name] = sub.SvcLogic
+		}
+	}
+	return m
+}

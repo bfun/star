@@ -16,7 +16,8 @@ var DTAMAP map[string]DataTransferAdapter
 var SVCMAP map[string]map[string]Service
 var RUTMAP map[string]map[string]Entrance
 var FMTMAP map[string]Format
-var FLWMAP map[string]Flow
+var FLOWMAP map[string]Flow
+var LOGICMAP map[string]map[string]Logic
 var JSONMAP map[string]map[string]cjsonsource.SvcFunc
 
 var PORT string = "8080"
@@ -53,10 +54,9 @@ func init() {
 	wg.Add(1)
 	go ParseAllFlowXml(wg)
 	wg.Add(1)
-	go func(wg *sync.WaitGroup) {
-		defer wg.Done()
-		JSONMAP = cjsonsource.ParseJsonSourceJson()
-	}(wg)
+	go ParseAllSvcLogicXml(wg)
+	wg.Add(1)
+	go ParseAllJsonC(wg)
 	wg.Wait()
 	linkServicesToDtas(SVCMAP, DTAMAP)
 }
