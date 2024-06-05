@@ -51,6 +51,13 @@ func codesHandler(c *gin.Context) {
 			if rut.DstType == "ALA" {
 				k += "@"
 			}
+		} else {
+			rut, ok := dtaRuts["^"+k+"$"]
+			if ok {
+				if rut.DstType == "ALA" {
+					k += "@"
+				}
+			}
 		}
 		s = append(s, k)
 	}
@@ -91,7 +98,7 @@ func detailHandler(c *gin.Context) {
 						v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 					}
 					if v.Route.DstType == "ALA" {
-						flowWrapperHandler(c)
+						flowWrapperHandler(c, v.Route.Destination, v.Route.SvcName)
 						return
 					}
 				}
@@ -120,18 +127,29 @@ func detailHandler(c *gin.Context) {
 type FlowSum struct {
 	DtaName string
 	SvcName string
+	Chart   string
 }
 
-func flowWrapperHandler(c *gin.Context) {
-	dtaName := c.Param("dta")
-	svcName := c.Param("svc")
-	var v = FlowSum{dtaName, svcName}
+func flowWrapperHandler(c *gin.Context, dtaName, svcName string) {
+	var v = FlowSum{dtaName, svcName, ""}
 	c.HTML(http.StatusOK, "flow-wrapper.html", v)
 }
 
 func flowHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	svcName := c.Param("svc")
-	var v = FlowSum{dtaName, svcName}
+	dta, ok := LOGICMAP[dtaName]
+	if !ok {
+		return
+	}
+	logic, ok := dta[svcName]
+	if !ok {
+		return
+	}
+	flow, ok := FLOWMAP[logic.FlowModel]
+	if !ok {
+		return
+	}
+	var v = FlowSum{dtaName, svcName, flowChart(flow)}
 	c.HTML(http.StatusOK, "flow.html", v)
 }
