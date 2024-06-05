@@ -23,8 +23,8 @@ type FlowStep struct {
 	StepType   string     `xml:"StepType,attr"`
 	StepDesc   string     `xml:"StepDesc,attr"`
 	CallType   string     `xml:"CallType,attr"`
-	Expression string     `xml:"Expression,chardata"`
-	Condition  string     `xml:"Condition,cdata"`
+	Expression string     `xml:"Expression"`
+	Condition  string     `xml:"Condition"`
 	NextSteps  []NextStep `xml:"NextStepTab>NextStep"`
 }
 type NextStep struct {
