@@ -2,6 +2,7 @@ package star
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"path"
 	"strings"
@@ -37,13 +38,13 @@ func flowChart(flow Flow) string {
 	for _, step := range flow.FlowSteps {
 		for _, next := range step.NextSteps {
 			if next.Value == "TRUE" {
-				md += fmt.Sprintf("\t%v{%v} --->|Y| %v\n", step.SeqNo, step.Condition, next.SeqNo)
+				md += fmt.Sprintf("\t%v{%v} --->|Y| %v\n", step.SeqNo, template.HTMLEscapeString(step.Condition), next.SeqNo)
 			} else if next.Value == "FALSE" {
-				md += fmt.Sprintf("\t%v{%v} --->|N| %v\n", step.SeqNo, step.Condition, next.SeqNo)
+				md += fmt.Sprintf("\t%v{%v} --->|N| %v\n", step.SeqNo, template.HTMLEscapeString(step.Condition), next.SeqNo)
 			} else if step.StepType == "E" {
-				md += fmt.Sprintf("\t%v[%v] ---> %v\n", step.SeqNo, step.Expression, next.SeqNo)
+				md += fmt.Sprintf("\t%v --->|[%v]| %v\n", step.SeqNo, template.HTMLEscapeString(step.Expression), next.SeqNo)
 			} else if step.StepType == "D" {
-				md += fmt.Sprintf("\t%v[call %v] ---> %v\n", step.SeqNo, step.CallType, next.SeqNo)
+				md += fmt.Sprintf("\t%v --->|[call %v]| %v\n", step.SeqNo, step.CallType, next.SeqNo)
 			} else {
 				md += fmt.Sprintf("\t%v ---> %v\n", step.SeqNo, next.SeqNo)
 			}
