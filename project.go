@@ -170,3 +170,14 @@ func getFormatFiles() map[string]string {
 	}
 	return m
 }
+
+func getFlowFiles() map[string]string {
+	m := make(map[string]string)
+	for _, v := range PROJECT.Apps {
+		m[v.Name] = v.Flow
+		for _, sub := range v.SubApps {
+			m[sub.Name] = sub.Flow
+		}
+	}
+	return m
+}
