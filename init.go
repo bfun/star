@@ -1,8 +1,10 @@
 package star
 
 import (
+	"fmt"
 	"github.com/bfun/cjsonsource"
 	"log"
+	"os"
 	"sync"
 )
 
@@ -17,7 +19,13 @@ var FMTMAP map[string]Format
 var FLWMAP map[string]Flow
 var JSONMAP map[string]map[string]cjsonsource.SvcFunc
 
+var PORT string = "8080"
+
 func init() {
+	fmt.Printf("len(os.Args): %d\n", len(os.Args))
+	if len(os.Args) > 1 {
+		PORT = os.Args[1]
+	}
 	ESADMIN = ParseESAdminFile()
 	log.Print("ESAdmin.xml parse success")
 	PROJECT = ParseProjectFile()

@@ -43,5 +43,5 @@ func Main() {
 	r.GET("/detail/:dta/:svc", detailHandler)
 	r.GET("/flow/:dta/:svc", flowHandler)
 	r.GET("/", indexHandler)
-	r.Run(":8080")
+	r.Run(":" + PORT)
 }
