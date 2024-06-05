@@ -3,6 +3,7 @@ package star
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"html/template"
 	"net/http"
 	"sort"
 	"strings"
@@ -127,7 +128,7 @@ func detailHandler(c *gin.Context) {
 type FlowSum struct {
 	DtaName string
 	SvcName string
-	Chart   string
+	Chart   template.HTML
 }
 
 func flowWrapperHandler(c *gin.Context, dtaName, svcName string) {
