@@ -27,11 +27,11 @@ type CustProc struct {
 
 func trimLogicCDATA(v *LogicTab) {
 	for _, logic := range v.Logics {
-		for _, custProc := range logic.CustProcs {
+		for j, custProc := range logic.CustProcs {
 			custProc.BeginProc = strings.TrimSpace(custProc.BeginProc)
 			custProc.EndProc = strings.TrimSpace(custProc.EndProc)
 			custProc.ErrProc = strings.TrimSpace(custProc.ErrProc)
-
+			logic.CustProcs[j] = custProc
 		}
 	}
 }

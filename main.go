@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"html/template"
+	"strings"
 	"time"
 )
 
@@ -18,6 +19,8 @@ func Main() {
 		"len": func(a []string) int {
 			return len(a)
 		},
+		"hasSuffix":  strings.HasSuffix,
+		"trimSuffix": strings.TrimSuffix,
 	})
 	r.LoadHTMLGlob("templates/*.html")
 	go func() {

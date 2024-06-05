@@ -3,7 +3,11 @@
         <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} ( {{ len .Codes }} )</div>
         <div class="layui-colla-content layui-show">
             {{ range .Codes }}
-            <span>{{ . }}</span>
+                {{ if hasSuffix . "@" }}
+                <span class="ala">{{ trimSuffix . "@" }}</span>
+                {{ else }}
+                <span>{{ . }}</span>
+                {{ end }}
             {{ end }}
         </div>
     </div>

@@ -40,8 +40,18 @@ func codesHandler(c *gin.Context) {
 	if !ok {
 		return
 	}
+	dtaRuts, ok := RUTMAP[DTANAME]
+	if !ok {
+		return
+	}
 	var s []string
 	for k, _ := range dta {
+		rut, ok := dtaRuts[k]
+		if ok {
+			if rut.DstType == "ALA" {
+				k += "@"
+			}
+		}
 		s = append(s, k)
 	}
 	sort.Strings(s)
