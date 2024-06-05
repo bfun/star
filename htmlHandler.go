@@ -151,6 +151,6 @@ func flowHandler(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var v = FlowSum{dtaName, svcName, flowChart(flow)}
+	var v = FlowSum{dtaName, svcName, template.HTML(flowChart(flow))}
 	c.HTML(http.StatusOK, "flow.html", v)
 }
