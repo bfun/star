@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func Main() {
+func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.Static("/static/", "./static")

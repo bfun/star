@@ -1,12 +1,11 @@
-package test
+package main
 
 import (
-	"github.com/bfun/star"
 	"testing"
 )
 
 func TestParseProjectFile(t *testing.T) {
-	p := star.ParseProjectFile()
+	p := ParseProjectFile()
 	t.Log(p)
 	if len(p.PubDtas) == 0 {
 		t.Error("Project PubDtas is empty")

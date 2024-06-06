@@ -1,13 +1,12 @@
-package test
+package main
 
 import (
-	"github.com/bfun/star"
 	"testing"
 )
 
 func TestParseESAdminFile(t *testing.T) {
-	e := star.ParseESAdminFile()
-	var ports, nodes []star.ESAdminDtaParm
+	e := ParseESAdminFile()
+	var ports, nodes []ESAdminDtaParm
 	for _, v := range e.DtaParms {
 		for _, p := range v.IPTabItems {
 			if p.Port != "" {
