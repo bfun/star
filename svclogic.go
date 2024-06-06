@@ -1,7 +1,6 @@
-package star
+package main
 
 import (
-	"fmt"
 	"log"
 	"path"
 	"strings"
@@ -64,6 +63,6 @@ func ParseAllSvcLogicXml(wg *sync.WaitGroup) {
 		m[ala] = parseOneSvcLogicXml(file)
 	}
 	LOGICMAP = m
-	fmt.Printf("%#v\n", m)
+	// fmt.Printf("%#v\n", m)
 	log.Print("SvcLogic.xml parse success")
 }

@@ -1,4 +1,4 @@
-package star
+package main
 
 import (
 	"bufio"
@@ -131,4 +131,9 @@ func EscapeMarkdownSpecialChars(input string) string {
 	}
 
 	return b.String()
+}
+
+func PrepareMarkdownText(input string) string {
+	input = strings.TrimSpace(input)
+	return strings.ReplaceAll(input, "\"", "")
 }

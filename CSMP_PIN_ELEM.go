@@ -1,4 +1,4 @@
-package star
+package main
 
 import (
 	"bufio"

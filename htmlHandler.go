@@ -1,8 +1,9 @@
-package star
+package main
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"html/template"
 	"net/http"
 	"sort"
 	"strings"
@@ -127,7 +128,7 @@ func detailHandler(c *gin.Context) {
 type FlowSum struct {
 	DtaName string
 	SvcName string
-	Chart   string
+	Chart   template.HTML
 }
 
 func flowWrapperHandler(c *gin.Context, dtaName, svcName string) {
@@ -150,6 +151,6 @@ func flowHandler(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var v = FlowSum{dtaName, svcName, flowChart(flow)}
+	var v = FlowSum{dtaName, svcName, template.HTML(flowChart(flow))}
 	c.HTML(http.StatusOK, "flow.html", v)
 }

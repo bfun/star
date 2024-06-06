@@ -1,4 +1,4 @@
-module github.com/bfun/star
+module star
 
 go 1.22.4
 

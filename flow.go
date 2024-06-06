@@ -1,4 +1,4 @@
-package star
+package main
 
 import (
 	"fmt"
@@ -37,14 +37,16 @@ func flowChart(flow Flow) string {
 	for _, step := range flow.FlowSteps {
 		for _, next := range step.NextSteps {
 			if next.Value == "TRUE" {
-				md += fmt.Sprintf("\t%v{%v} --->|Y| %v\n", step.SeqNo, EscapeMarkdownSpecialChars(step.Condition), next.SeqNo)
+				md += fmt.Sprintf("\t%v{\"%v\"} --->|Y| %v\n", step.SeqNo, PrepareMarkdownText(step.Condition), next.SeqNo)
 			} else if next.Value == "FALSE" {
-				md += fmt.Sprintf("\t%v{%v} --->|N| %v\n", step.SeqNo, EscapeMarkdownSpecialChars(step.Condition), next.SeqNo)
+				md += fmt.Sprintf("\t%v{\"%v\"} --->|N| %v\n", step.SeqNo, PrepareMarkdownText(step.Condition), next.SeqNo)
 			} else if step.StepType == "E" {
-				md += fmt.Sprintf("\t%v --->|[%v]| %v\n", step.SeqNo, EscapeMarkdownSpecialChars(step.Expression), next.SeqNo)
+				md += fmt.Sprintf("\t%v[\"%v\"] ---> %v\n", step.SeqNo, PrepareMarkdownText(step.Expression), next.SeqNo)
 			} else if step.StepType == "D" {
-				md += fmt.Sprintf("\t%v --->|[call %v]| %v\n", step.SeqNo, step.CallType, next.SeqNo)
-			} else {
+				md += fmt.Sprintf("\t%v[\"call %v\"] ---> %v\n", step.SeqNo, step.CallType, next.SeqNo)
+			} else if step.StepType == "N" {
+				md += fmt.Sprintf("\t%v[END]\n", step.SeqNo)
+			} else if next.SeqNo != -1 {
 				md += fmt.Sprintf("\t%v ---> %v\n", step.SeqNo, next.SeqNo)
 			}
 		}
@@ -60,10 +62,11 @@ func addFlowChart(v *FlowTab) {
 
 func trimFlowCDATA(v *FlowTab) {
 	for _, f := range v.Flows {
-		for _, s := range f.FlowSteps {
+		for j, s := range f.FlowSteps {
 			// fmt.Printf("%v\t%v\t[%v][%v]\n", f.Name, s.SeqNo, s.Expression, s.Condition)
 			s.Expression = strings.TrimSpace(s.Expression)
 			s.Condition = strings.TrimSpace(s.Condition)
+			f.FlowSteps[j] = s
 		}
 	}
 }

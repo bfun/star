@@ -1,4 +1,4 @@
-package star
+package main
 
 import (
 	"github.com/gin-contrib/cors"
