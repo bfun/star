@@ -36,21 +36,24 @@ func flowChart(flow Flow) string {
 	md := "flowchart TD\n"
 	for _, step := range flow.FlowSteps {
 		for _, next := range step.NextSteps {
-			if next.Value == "TRUE" {
-				md += fmt.Sprintf("\t%v --->|Y| %v\n", step.SeqNo, next.SeqNo)
-			} else if next.Value == "FALSE" {
-				md += fmt.Sprintf("\t%v --->|N| %v\n", step.SeqNo, next.SeqNo)
+			if step.StepType == "W" {
+				if next.Value == "TRUE" {
+					md += fmt.Sprintf("\t%v --->|Y| %v\n", step.SeqNo, next.SeqNo)
+				} else if next.Value == "FALSE" {
+					md += fmt.Sprintf("\t%v --->|N| %v\n", step.SeqNo, next.SeqNo)
+				}
 			} else if step.StepType == "E" {
 				md += fmt.Sprintf("\t%v[\"%v\"] ---> %v\n", step.SeqNo, PrepareMarkdownText(step.Expression), next.SeqNo)
 			} else if step.StepType == "D" {
 				md += fmt.Sprintf("\t%v[\"call %v\"] ---> %v\n", step.SeqNo, step.CallType, next.SeqNo)
-			} else if step.StepType == "W" {
-				md += fmt.Sprintf("note right of %v \"%v\"", step.SeqNo, PrepareMarkdownText(step.Condition))
 			} else if step.StepType == "N" {
 				md += fmt.Sprintf("\t%v[END]\n", step.SeqNo)
 			} else if next.SeqNo != -1 {
 				md += fmt.Sprintf("\t%v ---> %v\n", step.SeqNo, next.SeqNo)
 			}
+		}
+		if step.StepType == "W" {
+			md += fmt.Sprintf("\tnote right of %v \"%v\"\n", step.SeqNo, PrepareMarkdownText(step.Condition))
 		}
 	}
 	return md
