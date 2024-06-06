@@ -76,3 +76,59 @@ func getSomeKeysInMap[T any](m map[string]T, sub string) []string {
 	sort.Strings(keys)
 	return keys
 }
+
+/*
+EscapeMarkdownSpecialChars :
+https://www.markdownguide.org/basic-syntax/
+You can use a backslash to escape the following characters.
+
+\	backslash
+`	backtick (see also escaping backticks in code)
+*	asterisk
+_	underscore
+{ }	curly braces
+[ ]	brackets
+< >	angle brackets
+( )	parentheses
+#	pound sign
++	plus sign
+-	minus sign (hyphen)
+.	dot
+!	exclamation mark
+|
+*/
+func EscapeMarkdownSpecialChars(input string) string {
+	specialChars := map[rune]string{
+		'\\': "\\\\",
+		'`':  "\\`",
+		'*':  "\\*",
+		'_':  "\\_",
+		'{':  "\\{",
+		'}':  "\\}",
+		'[':  "\\[",
+		']':  "\\]",
+		'<':  "\\<",
+		'>':  "\\>",
+		'(':  "\\(",
+		')':  "\\)",
+		'#':  "\\#",
+		'+':  "\\+",
+		'-':  "\\-",
+		'.':  "\\.",
+		'!':  "\\!",
+		'|':  "\\|",
+	}
+
+	var b strings.Builder
+	b.Grow(len(input) * 2)
+
+	for _, r := range input {
+		if esc, ok := specialChars[r]; ok {
+			b.WriteString(esc)
+		} else {
+			b.WriteRune(r)
+		}
+	}
+
+	return b.String()
+}
