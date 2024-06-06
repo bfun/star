@@ -46,7 +46,15 @@ func flowChart(flow Flow) string {
 			} else if step.StepType == "E" {
 				md += fmt.Sprintf("\t%v[\"%v\"] ---> %v\n", step.SeqNo, PrepareMarkdownText(step.Expression), next.SeqNo)
 			} else if step.StepType == "D" {
-				md += fmt.Sprintf("\t%v[\"call %v\"] ---> %v\n", step.SeqNo, step.CallType, next.SeqNo)
+				var text string
+				if step.CallType == "sync" {
+					text = "同步调用服务方"
+				} else if step.CallType == "async" {
+					text = "异步调用服务方"
+				} else {
+					text = "调用服务方"
+				}
+				md += fmt.Sprintf("\t%v[%v] ---> %v\n", step.SeqNo, text, next.SeqNo)
 			} else if step.StepType == "N" {
 				md += fmt.Sprintf("\t%v[END]\n", step.SeqNo)
 			} else if next.SeqNo != -1 {

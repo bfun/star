@@ -99,7 +99,7 @@ func detailHandler(c *gin.Context) {
 						v.Message = append(v.Message, fmt.Sprintf("%v.%v route not found", dtaName, svcName))
 					}
 					if v.Route.DstType == "ALA" {
-						flowWrapperHandler(c, v.Route.Destination, v.Route.SvcName)
+						flowWrapperHandler(c, v.Route.Destination, v.Route.SvcName, svcName)
 						return
 					}
 				}
@@ -129,16 +129,18 @@ type FlowSum struct {
 	DtaName string
 	SvcName string
 	Chart   template.HTML
+	Code    string
 }
 
-func flowWrapperHandler(c *gin.Context, dtaName, svcName string) {
-	var v = FlowSum{dtaName, svcName, ""}
+func flowWrapperHandler(c *gin.Context, dtaName, svcName, code string) {
+	var v = FlowSum{dtaName, svcName, "", code}
 	c.HTML(http.StatusOK, "flow-wrapper.html", v)
 }
 
 func flowHandler(c *gin.Context) {
 	dtaName := c.Param("dta")
 	svcName := c.Param("svc")
+	code := c.Param("code")
 	dta, ok := LOGICMAP[dtaName]
 	if !ok {
 		return
@@ -151,6 +153,6 @@ func flowHandler(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var v = FlowSum{dtaName, svcName, template.HTML(flowChart(flow))}
+	var v = FlowSum{dtaName, svcName, template.HTML(flowChart(flow)), code}
 	c.HTML(http.StatusOK, "flow.html", v)
 }

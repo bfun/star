@@ -44,7 +44,7 @@ func main() {
 	*/
 	r.GET("/codes/:dta", codesHandler)
 	r.GET("/detail/:dta/:svc", detailHandler)
-	r.GET("/flow/:dta/:svc", flowHandler)
+	r.GET("/flow/:dta/:svc/:code", flowHandler)
 	r.GET("/", indexHandler)
 	r.Run(":" + PORT)
 }
