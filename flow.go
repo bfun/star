@@ -38,7 +38,8 @@ func flowChart(flow Flow) string {
 		for _, next := range step.NextSteps {
 			if step.StepType == "W" {
 				if next.Value == "TRUE" {
-					md += fmt.Sprintf("\t%v --->|Y| %v\n", step.SeqNo, next.SeqNo)
+					// md += fmt.Sprintf("\t%v --->|Y| %v\n", step.SeqNo, next.SeqNo)
+					md += fmt.Sprintf("\t%v --->|\"%v\"| %v\n", step.SeqNo, PrepareMarkdownText(step.Condition), next.SeqNo)
 				} else if next.Value == "FALSE" {
 					md += fmt.Sprintf("\t%v --->|N| %v\n", step.SeqNo, next.SeqNo)
 				}
@@ -53,7 +54,8 @@ func flowChart(flow Flow) string {
 			}
 		}
 		if step.StepType == "W" {
-			md += fmt.Sprintf("\tnote right of %v \"%v\"\n", step.SeqNo, PrepareMarkdownText(step.Condition))
+			// md += fmt.Sprintf("\tnote right of %v \"%v\"\n", step.SeqNo, PrepareMarkdownText(step.Condition))
+			md += fmt.Sprintf("\t%v{IF}\n", step.SeqNo)
 		}
 	}
 	return md
