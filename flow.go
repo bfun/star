@@ -39,12 +39,12 @@ func flowChart(flow Flow) string {
 			if step.StepType == "W" {
 				if next.Value == "TRUE" {
 					// md += fmt.Sprintf("\t%v --->|Y| %v\n", step.SeqNo, next.SeqNo)
-					md += fmt.Sprintf("\t%v --->|\"%v\"| %v\n", step.SeqNo, PrepareMarkdownText(step.Condition), next.SeqNo)
+					md += fmt.Sprintf("\t%d --->|\"%s\"| %d\n", step.SeqNo, PrepareMarkdownText(step.Condition), next.SeqNo)
 				} else if next.Value == "FALSE" {
-					md += fmt.Sprintf("\t%v --->|N| %v\n", step.SeqNo, next.SeqNo)
+					md += fmt.Sprintf("\t%d --->|N| %d\n", step.SeqNo, next.SeqNo)
 				}
 			} else if step.StepType == "E" {
-				md += fmt.Sprintf("\t%v[\"%v\"] ---> %v\n", step.SeqNo, PrepareMarkdownText(step.Expression), next.SeqNo)
+				md += fmt.Sprintf("\t%d[\"%s\"] ---> %d\n", step.SeqNo, PrepareMarkdownText(step.Expression), next.SeqNo)
 			} else if step.StepType == "D" {
 				var text string
 				if step.CallType == "sync" {
@@ -56,16 +56,16 @@ func flowChart(flow Flow) string {
 				} else {
 					text = "调用服务方"
 				}
-				md += fmt.Sprintf("\t%v[%v] ---> %v\n", step.SeqNo, text, next.SeqNo)
+				md += fmt.Sprintf("\t%d[\"%s\"] ---> %d\n", step.SeqNo, text, next.SeqNo)
 			} else if step.StepType == "N" {
-				md += fmt.Sprintf("\t%v[END]\n", step.SeqNo)
+				md += fmt.Sprintf("\t%d[END]\n", step.SeqNo)
 			} else if next.SeqNo != -1 {
-				md += fmt.Sprintf("\t%v ---> %v\n", step.SeqNo, next.SeqNo)
+				md += fmt.Sprintf("\t%d ---> %d\n", step.SeqNo, next.SeqNo)
 			}
 		}
 		if step.StepType == "W" {
 			// md += fmt.Sprintf("\tnote right of %v \"%v\"\n", step.SeqNo, PrepareMarkdownText(step.Condition))
-			md += fmt.Sprintf("\t%v{IF}\n", step.SeqNo)
+			md += fmt.Sprintf("\t%d{IF}\n", step.SeqNo)
 		}
 	}
 	return md
