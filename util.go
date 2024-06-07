@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -136,4 +137,18 @@ func EscapeMarkdownSpecialChars(input string) string {
 func PrepareMarkdownText(input string) string {
 	input = strings.TrimSpace(input)
 	return strings.ReplaceAll(input, "\"", "")
+}
+
+var RE_DTANAME_EXPRESSION = regexp.MustCompile(`\$__DDTA_NAME="(.*?)"`)
+var RE_SVCNAME_EXPRESSION = regexp.MustCompile(`\$__DSVC_NAME="(.*?)"`)
+
+func parseDtaSvcFromExpression(input string) (dtaName, svcName string) {
+	input = strings.ReplaceAll(input, " ", "")
+	dtamch := RE_DTANAME_EXPRESSION.FindStringSubmatch(input)
+	// fmt.Printf("%#v\n", dtamch)
+	dtaName = dtamch[1]
+	svcmch := RE_SVCNAME_EXPRESSION.FindStringSubmatch(input)
+	// fmt.Printf("%#v\n", svcmch)
+	svcName = svcmch[1]
+	return
 }

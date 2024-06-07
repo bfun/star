@@ -10,18 +10,27 @@ import (
 )
 
 type DataTransferAdapter struct {
-	XMLName          xml.Name `xml:"DataTransferAdapter"`
-	Name             string   `xml:"Name,attr"`
-	EvtIprtcfmtBegin string   `xml:"EvtIprtcfmtBegin"`
-	EvtIprtcfmtEnd   string   `xml:"EvtIprtcfmtEnd"`
-	EvtOprtcfmtBegin string   `xml:"EvtOprtcfmtBegin"`
-	EvtIfmtEnd       string   `xml:"EvtIfmtEnd"`
-	EvtOfmtBegin     string   `xml:"EvtOfmtBegin"`
-	EvtAcallBegin    string   `xml:"EvtAcallBegin"`
+	XMLName          xml.Name      `xml:"DataTransferAdapter"`
+	Name             string        `xml:"Name,attr"`
+	DTADesc          string        `xml:"DTADesc,attr"`
+	EvtIprtcfmtBegin string        `xml:"EvtIprtcfmtBegin"`
+	EvtIprtcfmtEnd   string        `xml:"EvtIprtcfmtEnd"`
+	EvtOprtcfmtBegin string        `xml:"EvtOprtcfmtBegin"`
+	EvtIfmtEnd       string        `xml:"EvtIfmtEnd"`
+	EvtOfmtBegin     string        `xml:"EvtOfmtBegin"`
+	EvtAcallBegin    string        `xml:"EvtAcallBegin"`
+	Nodes            []DtaParmNode `xml:"NodeTab>Node"`
 	ConvertPin       bool
 	Services         map[string]Service
 	NESB_SDTA_NAME   string
 	NESB_DDTA_NAME   string
+}
+
+type DtaParmNode struct {
+	Name string `xml:"Name,attr"`
+	Desc string `xml:"Desc,attr"`
+	IP   string
+	Port string
 }
 
 func trimDtaParmCDATA(d *DataTransferAdapter) {
@@ -84,6 +93,24 @@ func parseNESB_DDTA_NAME(dtas map[string]DataTransferAdapter) {
 		}
 	}
 }
+func parseNodeInfo(dtas map[string]DataTransferAdapter) {
+	for dtaName, dtap := range dtas {
+		for _, edta := range ESADMIN.DtaParms {
+			if edta.DtaName == dtaName {
+				for _, edtaNode := range edta.Nodes {
+					for k, dtapNode := range dtap.Nodes {
+						if edtaNode.NodeName == dtapNode.Name {
+							dtapNode.IP = edtaNode.Port.NodeIP
+							dtapNode.Port = edtaNode.Port.NodePort
+							dtap.Nodes[k] = dtapNode
+						}
+					}
+				}
+				break
+			}
+		}
+	}
+}
 func parseOneDtaParmXml(fileName string) DataTransferAdapter {
 	fullPath := path.Join(getRootDir(), fileName)
 	var v DataTransferAdapter
@@ -106,6 +133,7 @@ func ParseAllDtaParmXml(wg *sync.WaitGroup) {
 	judgeConvertPin(m)
 	parseNESB_SDTA_NAME(m)
 	parseNESB_DDTA_NAME(m)
+	parseNodeInfo(m)
 	DTAMAP = m
 	log.Print("DtaParm.xml parse success")
 }

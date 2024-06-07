@@ -130,10 +130,11 @@ type FlowSum struct {
 	SvcName string
 	Chart   template.HTML
 	Code    string
+	DtaNode string
 }
 
 func flowWrapperHandler(c *gin.Context, dtaName, svcName, code string) {
-	var v = FlowSum{dtaName, svcName, "", code}
+	var v = FlowSum{dtaName, svcName, "", code, ""}
 	c.HTML(http.StatusOK, "flow-wrapper.html", v)
 }
 
@@ -153,6 +154,6 @@ func flowHandler(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var v = FlowSum{dtaName, svcName, template.HTML(flowChart(flow)), code}
+	var v = FlowSum{dtaName, svcName, template.HTML(flowChart(flow)), code, flowDtasInfo(flow)}
 	c.HTML(http.StatusOK, "flow.html", v)
 }

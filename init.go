@@ -22,7 +22,7 @@ var JSONMAP map[string]map[string]cjsonsource.SvcFunc
 
 var PORT string = "8080"
 
-func init() {
+func init1() {
 	fmt.Printf("len(os.Args): %d\n", len(os.Args))
 	if len(os.Args) > 1 {
 		PORT = os.Args[1]

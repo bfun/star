@@ -68,7 +68,23 @@ func flowChart(flow Flow) string {
 	}
 	return md
 }
-
+func flowDtasInfo(flow Flow) string {
+	var s string
+	for _, step := range flow.FlowSteps {
+		if step.StepType == "E" {
+			dtaName, svcName := parseDtaSvcFromExpression(step.Expression)
+			dta, ok := DTAMAP[dtaName]
+			if ok {
+				s += fmt.Sprintf("%s\t%s\n", dtaName, dta.DTADesc)
+				for _, node := range dta.Nodes {
+					s += fmt.Sprintf("%s\t%s\t%s:%s\n", node.Name, node.Desc, node.IP, node.Port)
+				}
+			}
+			_ = svcName
+		}
+	}
+	return s
+}
 func addFlowChart(v *FlowTab) {
 	for _, flow := range v.Flows {
 		flow.Chart = flowChart(flow)
