@@ -77,7 +77,7 @@ func flowDtasInfo(flow Flow) string {
 			if ok {
 				s += fmt.Sprintf("%s\t%s\n", dtaName, dta.DTADesc)
 				for _, node := range dta.Nodes {
-					s += fmt.Sprintf("%s\t%s\t%s:%s\n", node.Name, node.Desc, node.IP, node.Port)
+					s += fmt.Sprintf("\t%s\t%s\t%s:%s\n", node.Name, node.Desc, node.IP, node.Port)
 				}
 			}
 			_ = svcName
