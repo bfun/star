@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	Init()
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.Static("/static/", "./static")

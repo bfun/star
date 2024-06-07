@@ -41,7 +41,7 @@ func trimSpacesFromCDATA(r *RouteTab) {
 
 func parseOneRouteXml(fileName string) map[string]Entrance {
 	fullPath := path.Join(getRootDir(), fileName)
-	decoder := getGbFileDecoder(fullPath)
+	decoder := getStarFileDecoder(fullPath)
 	var v RouteTab
 	err := decoder.Decode(&v)
 	if err != nil {

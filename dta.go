@@ -114,7 +114,7 @@ func parseNodeInfo(dtas map[string]DataTransferAdapter) {
 func parseOneDtaParmXml(fileName string) DataTransferAdapter {
 	fullPath := path.Join(getRootDir(), fileName)
 	var v DataTransferAdapter
-	decoder := getGbFileDecoder(fullPath)
+	decoder := getStarFileDecoder(fullPath)
 	err := decoder.Decode(&v)
 	if err != nil {
 		panic(err)

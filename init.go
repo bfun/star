@@ -22,7 +22,9 @@ var JSONMAP map[string]map[string]cjsonsource.SvcFunc
 
 var PORT string = "8080"
 
-func init1() {
+// Init
+// if named init, can't run unit test
+func Init() {
 	fmt.Printf("len(os.Args): %d\n", len(os.Args))
 	if len(os.Args) > 1 {
 		PORT = os.Args[1]

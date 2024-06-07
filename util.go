@@ -27,6 +27,8 @@ func fileScanner(filename string) (file *os.File, scanner *bufio.Scanner) {
 	scanner = bufio.NewScanner(file)
 	return
 }
+
+// replaced by getStarFileDecoder
 func getGbFileDecoder(fileName string) *xml.Decoder {
 	buf, err := os.ReadFile(fileName)
 	if err != nil {
@@ -146,9 +148,13 @@ func parseDtaSvcFromExpression(input string) (dtaName, svcName string) {
 	input = strings.ReplaceAll(input, " ", "")
 	dtamch := RE_DTANAME_EXPRESSION.FindStringSubmatch(input)
 	// fmt.Printf("%#v\n", dtamch)
-	dtaName = dtamch[1]
+	if len(dtamch) > 1 {
+		dtaName = dtamch[1]
+	}
 	svcmch := RE_SVCNAME_EXPRESSION.FindStringSubmatch(input)
 	// fmt.Printf("%#v\n", svcmch)
-	svcName = svcmch[1]
+	if len(svcmch) > 1 {
+		svcName = svcmch[1]
+	}
 	return
 }
