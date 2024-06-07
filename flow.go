@@ -49,8 +49,10 @@ func flowChart(flow Flow) string {
 				var text string
 				if step.CallType == "sync" {
 					text = "同步调用服务方"
-				} else if step.CallType == "async" {
-					text = "异步调用服务方"
+				} else if step.CallType == "SYNC_NOERR" {
+					text = "同步调用服务方，忽略错误"
+				} else if step.CallType == "NORPL" {
+					text = "异步调用服务方，无需响应"
 				} else {
 					text = "调用服务方"
 				}
