@@ -75,6 +75,9 @@ func (t *TagType) getReq(line string) {
 func (t *TagType) getRes(line string) {
 	t.GetRes = map[string]string{}
 	vs := RE_TAGTYPE_GETRES.FindStringSubmatch(line)
+	if vs == nil {
+		return
+	}
 	if len(vs) != 2 {
 		panic(line)
 	}
@@ -90,6 +93,9 @@ func (t *TagType) getRes(line string) {
 func (t *TagType) setReq(line string) {
 	t.SetReq = map[string]string{}
 	vs := RE_TAGTYPE_SETREQ.FindStringSubmatch(line)
+	if vs == nil {
+		return
+	}
 	if len(vs) != 2 {
 		panic(line)
 	}
@@ -105,6 +111,9 @@ func (t *TagType) setReq(line string) {
 func (t *TagType) setRes(line string) {
 	t.SetRes = map[string]string{}
 	vs := RE_TAGTYPE_SETRES.FindStringSubmatch(line)
+	if vs == nil {
+		return
+	}
 	if len(vs) != 2 {
 		panic(line)
 	}
