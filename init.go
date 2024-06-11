@@ -19,6 +19,8 @@ var FMTMAP map[string]Format
 var FLOWMAP map[string]Flow
 var LOGICMAP map[string]map[string]Logic
 var JSONMAP map[string]map[string]cjsonsource.SvcFunc
+var NesbTxmlMAP map[string]map[string]NesbTxml
+var GetSvcNameMAP map[string]map[string]string
 
 var PORT string = "8080"
 
@@ -59,6 +61,10 @@ func Init() {
 	go ParseAllSvcLogicXml(wg)
 	wg.Add(1)
 	go ParseAllJsonC(wg)
+	wg.Add(1)
+	go ParseGetSvcnameByProcode(wg)
+	wg.Add(1)
+	go ParseNesbTxml(wg)
 	wg.Wait()
 	linkServicesToDtas(SVCMAP, DTAMAP)
 }

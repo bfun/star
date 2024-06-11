@@ -1,14 +1,42 @@
 <div class="layui-collapse">
+    {{ if gt len .Simples 0 }}
     <div class="layui-colla-item">
-        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} ( {{ len .Codes }} )</div>
+        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} 通路交易 ( {{ len .Simples }} )</div>
         <div class="layui-colla-content layui-show">
-            {{ range .Codes }}
-                {{ if hasSuffix . "@" }}
-                <span class="ala">{{ trimSuffix . "@" }}</span>
-                {{ else }}
-                <span>{{ . }}</span>
-                {{ end }}
+            {{ range .Simples }}
+            <span>{{ . }}</span>
             {{ end }}
         </div>
     </div>
+    {{ end }}
+    {{ if gt len .GetSvcNames 0 }}
+    <div class="layui-colla-item">
+        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} 透传交易 ( {{ len .GetSvcNames }} ) enum/get_svcname_by_procode</div>
+        <div class="layui-colla-content layui-show">
+            {{ range .GetSvcNames }}
+            <span>{{ . }}</span>
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+    {{ if gt len .NesbTxmls 0 }}
+    <div class="layui-colla-item">
+        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} 透传交易 ( {{ len .NesbTxmls }} ) enum/nesb_txml</div>
+        <div class="layui-colla-content layui-show">
+            {{ range .NesbTxmls }}
+            <span>{{ . }}</span>
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+    {{ if gt len .Complexes 0 }}
+    <div class="layui-colla-item">
+        <div class="layui-colla-title">{{ .DtaName }} : {{ .Port }} 组合交易 ( {{ len .Complexes }} )</div>
+        <div class="layui-colla-content layui-show">
+            {{ range .Complexes }}
+            <span>{{ . }}</span>
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
 </div>

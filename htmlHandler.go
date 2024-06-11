@@ -31,7 +31,11 @@ func indexHandler(c *gin.Context) {
 type CodesSum struct {
 	DtaName string
 	Port    string
-	Codes   []string
+	// Codes   []string
+	Simples     []string
+	Complexes   []string
+	GetSvcNames []string
+	NesbTxmls   []string
 }
 
 func codesHandler(c *gin.Context) {
@@ -45,25 +49,45 @@ func codesHandler(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var s []string
+	var v CodesSum
 	for k, _ := range dta {
+		isComplex := false
 		rut, ok := dtaRuts[k]
 		if ok {
 			if rut.DstType == "ALA" {
-				k += "@"
+				isComplex = true
 			}
 		} else {
 			rut, ok := dtaRuts["^"+k+"$"]
 			if ok {
 				if rut.DstType == "ALA" {
-					k += "@"
+					isComplex = true
 				}
 			}
 		}
-		s = append(s, k)
+		if isComplex {
+			v.Complexes = append(v.Complexes, k)
+		} else {
+			v.Simples = append(v.Simples, k)
+		}
 	}
-	sort.Strings(s)
-	var v CodesSum
+	sort.Strings(v.Simples)
+	sort.Strings(v.Complexes)
+	tcSvcnames, ok := GetSvcNameMAP[DTANAME]
+	if ok {
+		for k, _ := range tcSvcnames {
+			v.GetSvcNames = append(v.GetSvcNames, k)
+		}
+	}
+	sort.Strings(v.GetSvcNames)
+	tcTxmls, ok := NesbTxmlMAP[DTANAME]
+	if ok {
+		for k, _ := range tcTxmls {
+			v.NesbTxmls = append(v.NesbTxmls, k)
+		}
+	}
+	sort.Strings(v.NesbTxmls)
+
 	v.DtaName = dtaName
 	for _, d := range ESADMIN.DtaParms {
 		if d.DtaName != DTANAME {
@@ -77,7 +101,6 @@ func codesHandler(c *gin.Context) {
 		}
 		v.Port = strings.Join(ports, ",")
 	}
-	v.Codes = s
 	c.HTML(http.StatusOK, "codes.html", v)
 }
 
